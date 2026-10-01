@@ -310,7 +310,8 @@ fn dispatch_format_cli(args : Array[String]) -> Unit {
                    else if s.name == "pcg" { get_pcg_divergence_norm() }
                    else if s.name == "mac" { get_mac_divergence_norm() }
                    else { get_simple_divergence_norm() }
-    println(format_centerline_csv(s, re_val, div_norm))
+    let dt_val = if s.name == "chorin" { get_dt() } else { dt }
+    println(format_centerline_csv(s, re_val, dt_val, div_norm))
   } else if fmt == "monitor" {
     // Monitor: build a simple residual history by running the first solver
     // in record_interval-step batches and collecting div_norm at each batch.

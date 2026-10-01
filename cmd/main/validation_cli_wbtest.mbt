@@ -19,3 +19,10 @@ test "checkpoint_steps_must_be_positive_and_strictly_increasing" {
   assert_eq(parse_checkpoint_steps("0,5").length(), 0)
   assert_eq(parse_checkpoint_steps("bad").length(), 0)
 }
+
+test "chorin_runtime_dt_can_be_changed_for_grid_validation" {
+  let original = get_dt()
+  set_chorin_dt(0.0005)
+  assert_eq(get_dt(), 0.0005)
+  set_chorin_dt(original)
+}

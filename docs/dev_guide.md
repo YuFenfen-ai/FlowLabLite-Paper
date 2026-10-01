@@ -30,7 +30,7 @@ node --version    # e.g. v20.x
 ```bash
 git clone https://github.com/YuFenfen-ai/FlowLabLite.git
 cd FlowLabLite
-moon test --target wasm          # 165 tests should all pass
+moon test --target wasm          # 176 tests should all pass
 bash build_wasm.sh release       # build the production WASM
 ```
 
@@ -41,8 +41,8 @@ bash build_wasm.sh release       # build the production WASM
 ```
 cmd/main/main.mbt          ← all solver code (~3000+ lines)
 cmd/main/main_wbtest.mbt   ← tests T1–T58 (core solvers)
-cmd/main/main_ext_wbtest.mbt ← tests T59–T152 (extended features/3D/advanced)
-cmd/main3d/main3d_wbtest.mbt ← tests 3D solvers (13 basic tests)
+cmd/main/main_ext_wbtest.mbt ← tests T59–T154 (extended features/advanced)
+cmd/main/solver_projection_tvd_wbtest.mbt ← Projection-TVD extension tests (19)
 cmd/main/moon.pkg.json     ← WASM exports list (121 functions)
 docs/arch.md               ← architecture overview
 docs/api_reference.md      ← WASM function signatures
@@ -64,7 +64,7 @@ Code is organised in layers within `main.mbt`:
 ## 3. Running Tests
 
 ```bash
-# Run all 165 tests on the wasm target (required — native target differs)
+# Run all 176 tests on the wasm target (required — native target differs)
 moon test --target wasm
 
 # Run a single named test (prefix match)

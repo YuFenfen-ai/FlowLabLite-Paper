@@ -1,0 +1,36 @@
+{
+  "re": 100,
+  "grid": 65,
+  "checkpoints": [
+    5000,
+    10000,
+    20000,
+    40000
+  ],
+  "command": [
+    "C:\\Users\\admin\\.moon\\bin\\moon.exe",
+    "run",
+    "cmd/main",
+    "--release",
+    "--target",
+    "wasm",
+    "--",
+    "--format",
+    "centerline",
+    "--solver",
+    "chorin",
+    "--grid",
+    "65",
+    "--checkpoints",
+    "5000,10000,20000,40000",
+    "--re",
+    "100"
+  ],
+  "elapsed_seconds": 127.89580509997904,
+  "resumed": false,
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "summary_json": "D:\\yufenfen\\MoonBit\\project\\FlowLabLite\\.worktrees\\high-re-projection-tvd\\validation\\results\\grid_convergence_re100\\re100\\g65\\time_convergence.json",
+  "time_converged": false,
+  "selected_time_step": null
+}

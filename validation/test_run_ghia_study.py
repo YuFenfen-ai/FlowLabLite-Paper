@@ -34,6 +34,10 @@ class GhiaStudyRunnerTests(unittest.TestCase):
         self.assertEqual(command[command.index("--checkpoints") + 1], "5000,10000,20000")
         self.assertEqual(command[command.index("--re") + 1], "400")
 
+    def test_solver_command_passes_runtime_dt(self) -> None:
+        command = build_solver_command(Path("moon.exe"), 257, (5000,), 100, 0.0005)
+        self.assertEqual(command[command.index("--dt") + 1], "0.0005")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -47,7 +47,7 @@ struct SolverExport {
 /// All solvers are concatenated in the same file; the "solver" column
 /// identifies each row's origin.
 fn format_csv(solvers : Array[SolverExport]) -> String {
-  let re = 2.0 / nu
+  let re = 2.0 / g_nu_runtime[0]
   let buf = StringBuilder::new()
   buf.write_string("# FlowLabLite export | Re=\{re} | solvers: \{solvers.length()}\n")
   buf.write_string("solver,i,j,x,y,u,v,p,vel_mag\n")
@@ -83,7 +83,7 @@ fn format_csv(solvers : Array[SolverExport]) -> String {
 ///
 /// Compatible with ParaView ≥ 5.0 and VisIt.
 fn format_vtk(s : SolverExport) -> String {
-  let re   = 2.0 / nu
+  let re   = 2.0 / g_nu_runtime[0]
   let npts = s.nc * s.nc
   let buf  = StringBuilder::new()
 
@@ -153,7 +153,7 @@ fn format_vtk(s : SolverExport) -> String {
 ///
 /// Compatible with Tecplot 360 EX and ParaView (Tecplot reader plug-in).
 fn format_tecplot(solvers : Array[SolverExport]) -> String {
-  let re  = 2.0 / nu
+  let re  = 2.0 / g_nu_runtime[0]
   let buf = StringBuilder::new()
 
   buf.write_string("TITLE = \"FlowLabLite Re=\{re} all solvers\"\n")
@@ -200,12 +200,13 @@ fn format_tecplot(solvers : Array[SolverExport]) -> String {
 fn format_centerline_csv(
   s : SolverExport,
   re : Double,
+  dt_ : Double,
   div_norm : Double,
 ) -> String {
   let buf = StringBuilder::new()
   buf.write_string(
     "# FlowLabLite centerline velocity | solver=\{s.name} | Re=\{re} | " +
-    "step=\{s.steps} | grid=\{s.nc}x\{s.nc} | h=\{s.h} | dt=\{dt} | " +
+    "step=\{s.steps} | grid=\{s.nc}x\{s.nc} | h=\{s.h} | dt=\{dt_} | " +
     "pressure_iters=\{nit} | div_norm=\{div_norm}\n",
   )
   buf.write_string("component,index,coord,value\n")
@@ -340,7 +341,7 @@ fn format_monitor_csv(
 ///
 /// Data ordering: x (col) varies fastest, then y (row) — VTK standard.
 fn format_vti(s : SolverExport) -> String {
-  let re     = 2.0 / nu
+  let re     = 2.0 / g_nu_runtime[0]
   let nc1    = s.nc - 1                 // extent upper bound per axis
   let buf    = StringBuilder::new()
 

@@ -10,3 +10,6 @@ decides.md
 todo.md
 *.class
 bench/chorin_gs_bench_c
+_build/
+__pycache__/
+*.pyc

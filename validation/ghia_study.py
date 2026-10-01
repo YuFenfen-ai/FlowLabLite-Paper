@@ -36,7 +36,9 @@ _EXPECTED_PRESSURE_ITERS = 50
 _EXPECTED_SOLVER = "chorin"
 
 
-def parse_centerline(path: str | Path, *, expected_re: int | None = None) -> CenterlineData:
+def parse_centerline(
+    path: str | Path, *, expected_re: int | None = None, expected_dt: float = _EXPECTED_DT
+) -> CenterlineData:
     """Read and validate one self-describing FlowLabLite centerline CSV."""
     lines = Path(path).read_text(encoding="utf-8").splitlines()
     metadata_line = next((line for line in lines if line.startswith("#")), None)
@@ -66,7 +68,7 @@ def parse_centerline(path: str | Path, *, expected_re: int | None = None) -> Cen
     u_coord, u_value = _validate_component("u_vcl", components["u_vcl"], (0.0, 1.0))
     v_coord, v_value = _validate_component("v_hcl", components["v_hcl"], (0.0, 0.0))
     data = CenterlineData(metadata, u_coord, u_value, v_coord, v_value)
-    _validate_study_settings(data, expected_re=expected_re)
+    _validate_study_settings(data, expected_re=expected_re, expected_dt=expected_dt)
     return data
 
 
@@ -173,7 +175,9 @@ def _validate_profile(coord: Sequence[float], value: Sequence[float], label: str
         raise ValueError(f"{label} coordinates must be strictly increasing")
 
 
-def _validate_study_settings(data: CenterlineData, *, expected_re: int | None) -> None:
+def _validate_study_settings(
+    data: CenterlineData, *, expected_re: int | None, expected_dt: float = _EXPECTED_DT
+) -> None:
     solver = _required_metadata(data, "solver", str)
     reynolds = _required_metadata(data, "Re", float)
     grid = _required_metadata(data, "grid", str)
@@ -186,8 +190,8 @@ def _validate_study_settings(data: CenterlineData, *, expected_re: int | None) -
         raise ValueError(f"validation requires solver={_EXPECTED_SOLVER}")
     if reynolds <= 0.0 or (expected_re is not None and not math.isclose(reynolds, expected_re)):
         raise ValueError(f"centerline Re={reynolds} does not match expected Re={expected_re}")
-    if not math.isclose(timestep, _EXPECTED_DT, rel_tol=0.0, abs_tol=_SETTINGS_TOLERANCE):
-        raise ValueError(f"validation requires dt={_EXPECTED_DT}")
+    if not math.isclose(timestep, expected_dt, rel_tol=0.0, abs_tol=_SETTINGS_TOLERANCE):
+        raise ValueError(f"validation requires dt={expected_dt}")
     if pressure_iters != _EXPECTED_PRESSURE_ITERS:
         raise ValueError(f"validation requires pressure_iters={_EXPECTED_PRESSURE_ITERS}")
     if step <= 0 or divergence < 0.0:
@@ -291,7 +295,8 @@ def _settings_signature(data: CenterlineData) -> tuple[object, ...]:
 
 
 def write_summary(
-    cases: Sequence[str | Path | CenterlineData], output_csv: str | Path, output_json: str | Path
+    cases: Sequence[str | Path | CenterlineData], output_csv: str | Path, output_json: str | Path,
+    *, expected_dt: float = _EXPECTED_DT,
 ) -> dict[str, object]:
     """Write per-case Ghia metrics and strict adjacent-checkpoint convergence evidence."""
     if not cases:
@@ -309,7 +314,7 @@ def write_summary(
         else:
             source_path = Path(case).resolve()
             source_hash = _sha256(source_path)
-            data = parse_centerline(source_path)
+            data = parse_centerline(source_path, expected_dt=expected_dt)
         case_re = int(round(float(data.metadata["Re"])))
         if case_re not in GHIA_REFERENCE:
             raise ValueError(f"no Ghia reference data are configured for Re={case_re}")
@@ -317,7 +322,7 @@ def write_summary(
             expected_re = case_re
         elif case_re != expected_re:
             raise ValueError("all time-convergence checkpoints must use the same Reynolds number")
-        _validate_study_settings(data, expected_re=expected_re)
+        _validate_study_settings(data, expected_re=expected_re, expected_dt=expected_dt)
         normalized.append((data, source_path, source_hash))
     assert expected_re is not None
 

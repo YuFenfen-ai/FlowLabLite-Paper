@@ -204,9 +204,10 @@ User opens local_viewer.html
 
 ```
 moon test --target wasm
-  → Discovers main_wbtest.mbt (T1–T58), main_ext_wbtest.mbt (T59–T152), main3d_wbtest.mbt (3D)
+  → Discovers main_wbtest.mbt (T1–T58), main_ext_wbtest.mbt (T59–T154),
+  validation_cli_wbtest.mbt and solver_projection_tvd_wbtest.mbt
   → Compiles to wasm-gc and runs all test functions
-  → Reports 165/165 passed
+  → Reports 176/176 passed
 ```
 
 ---
@@ -220,7 +221,7 @@ moon test --target wasm
 | BC order: walls → lid | Lid BC must be applied last to preserve corner values | `CLAUDE.md` §1 |
 | GAMG uses Richardson, not PCG | CG-based coarse solver is non-linear → breaks PCG orthogonality | `docs/preconditioner_theory.md` |
 | SND Laplacian (diagonal < 0) | Standard finite-difference convention; p\* < 0 for b > 0 | `CLAUDE.md` §1 |
-| Separate test files | T1–T58 (functional), T59–T152 (engineering), 3D tests | `docs/test_report.md` |
+| Separate test files | T1–T58 (functional), T59–T154 (engineering), CLI + extension tests | `docs/test_report.md` |
 
 ---
 

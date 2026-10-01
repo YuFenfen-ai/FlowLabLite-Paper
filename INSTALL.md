@@ -138,12 +138,12 @@ moon run cmd/main                  # native binary (no browser export)
 ## Option D — Running the Test Suite
 
 ```bash
-moon test --target wasm            # 165 tests, all should pass
+moon test --target wasm            # 176 tests, all should pass
 ```
 
 Expected output:
 ```
-Total tests: 165, passed: 165, failed: 0.
+Total tests: 176, passed: 176, failed: 0.
 ```
 
 Run a subset:

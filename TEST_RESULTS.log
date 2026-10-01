@@ -1,0 +1,579 @@
+# moon test cmd/main --target wasm
+# moon moon 0.1.20260618 (afb4494 2026-06-18)
+# date: 2026-10-01
+
+Warning: Both moon.pkg.json and moon.pkg exist at package root 'D:\FlowLabLite-release\cmd\main', using the new format moon.pkg. Please remove the deprecated moon.pkg.json.
+Warning: [0020]
+    ╭─[ D:\FlowLabLite-release\cmd\main\io_cli.mbt:72:35 ]
+    │
+ 72 │     let step = parse_pos_int(part.to_string(), 0)
+    │                                   ────┬────  
+    │                                       ╰────── Warning (deprecated): Use `to_owned` to allocate an owned String from a StringView; use `Show::to_string` or format strings for display
+────╯
+Warning: [0020]
+     ╭─[ D:\FlowLabLite-release\cmd\main\io_formats.mbt:420:8 ]
+     │
+ 420 │     if not(first) { buf.write_string(",") }
+     │        ─┬─  
+     │         ╰─── Warning (deprecated): Use !expr instead
+─────╯
+Warning: [0020]
+    ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:78:6 ]
+    │
+ 78 │   if not(enabled) {
+    │      ─┬─  
+    │       ╰─── Warning (deprecated): Use !expr instead
+────╯
+Warning: [0071]
+    ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:82:14 ]
+    │
+ 82 │     let ts = @bench.monotonic_clock_start()
+    │              ──────────────┬─────────────  
+    │                            ╰─────────────── Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+────╯
+Warning: [0071]
+    ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:84:14 ]
+    │
+ 84 │     let ms = @bench.monotonic_clock_end(ts) / 1000.0
+    │              ─────────────┬────────────  
+    │                           ╰────────────── Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:322:4 ]
+     │
+ 322 │ fn generate_mesh_grid() -> (Array[Array[Double]], Array[Array[Double]]) {
+     │    ─────────┬────────  
+     │             ╰────────── Warning (unused_value): Unused function 'generate_mesh_grid'
+─────╯
+Warning: [0020]
+     ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:474:29 ]
+     │
+ 474 │     if (n + 1) % 10 == 0 && not(g_quiet_mode[0]) {
+     │                             ─┬─  
+     │                              ╰─── Warning (deprecated): Use !expr instead
+─────╯
+Warning: [0001]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:1555:4 ]
+      │
+ 1555 │ fn pressure_poisson_pcg_dilu(
+      │    ────────────┬────────────  
+      │                ╰────────────── Warning (unused_value): Unused function 'pressure_poisson_pcg_dilu'
+──────╯
+Warning: [0001]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:1565:4 ]
+      │
+ 1565 │ fn pressure_poisson_pcg_dic(
+      │    ────────────┬───────────  
+      │                ╰───────────── Warning (unused_value): Unused function 'pressure_poisson_pcg_dic'
+──────╯
+Warning: [0001]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:1587:4 ]
+      │
+ 1587 │ fn pressure_poisson_pcg_gamg(
+      │    ────────────┬────────────  
+      │                ╰────────────── Warning (unused_value): Unused function 'pressure_poisson_pcg_gamg'
+──────╯
+Warning: [0020]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:1712:29 ]
+      │
+ 1712 │     if (n + 1) % 10 == 0 && not(g_quiet_mode[0]) {
+      │                             ─┬─  
+      │                              ╰─── Warning (deprecated): Use !expr instead
+──────╯
+Warning: [0020]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:2175:29 ]
+      │
+ 2175 │     if (n + 1) % 10 == 0 && not(g_quiet_mode[0]) {
+      │                             ─┬─  
+      │                              ╰─── Warning (deprecated): Use !expr instead
+──────╯
+Warning: [0071]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:2618:19 ]
+      │
+ 2618 │   let _cli_args = @env.args()
+      │                   ────┬────  
+      │                       ╰────── Warning (core_package_not_imported): Package `env` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+──────╯
+Warning: [0071]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:2798:17 ]
+      │
+ 2798 │   let prog_ts = @bench.monotonic_clock_start()
+      │                 ──────────────┬─────────────  
+      │                               ╰─────────────── Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+──────╯
+Warning: [0071]
+      ╭─[ D:\FlowLabLite-release\cmd\main\main.mbt:2856:18 ]
+      │
+ 2856 │   let total_ms = @bench.monotonic_clock_end(prog_ts) / 1000.0
+      │                  ─────────────┬────────────  
+      │                               ╰────────────── Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+──────╯
+Warning: [0071]
+   ╭─[ D:\FlowLabLite-release\cmd\main\main_bench.mbt:2:19 ]
+   │
+ 2 │ test "fib20" (b : @bench.T) {
+   │                   ────┬───  
+   │                       ╰───── Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+───╯
+Warning: [0020]
+    ╭─[ D:\FlowLabLite-release\cmd\main\main_ext_wbtest.mbt:54:10 ]
+    │
+ 54 │       if not(i == 0 && j == 1) {
+    │          ─┬─  
+    │           ╰─── Warning (deprecated): Use !expr instead
+────╯
+Warning: [0020]
+     ╭─[ D:\FlowLabLite-release\cmd\main\main_ext_wbtest.mbt:935:39 ]
+     │
+ 935 │     if line.contains("<DataArray") && not(line.contains("</DataArray")) {
+     │                                       ─┬─  
+     │                                        ╰─── Warning (deprecated): Use !expr instead
+─────╯
+Warning: [0001]
+    ╭─[ D:\FlowLabLite-release\cmd\main\monitor.mbt:27:4 ]
+    │
+ 27 │ fn compute_ru(
+    │    ─────┬────  
+    │         ╰────── Warning (unused_value): Unused function 'compute_ru'
+────╯
+Warning: [0001]
+    ╭─[ D:\FlowLabLite-release\cmd\main\monitor.mbt:47:4 ]
+    │
+ 47 │ fn compute_rv(
+    │    ─────┬────  
+    │         ╰────── Warning (unused_value): Unused function 'compute_rv'
+────╯
+Warning: [0001]
+    ╭─[ D:\FlowLabLite-release\cmd\main\monitor.mbt:75:4 ]
+    │
+ 75 │ fn compute_cfl_max(
+    │    ───────┬───────  
+    │           ╰───────── Warning (unused_value): Unused function 'compute_cfl_max'
+────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\monitor.mbt:104:4 ]
+     │
+ 104 │ fn compute_kinetic_energy(
+     │    ───────────┬──────────  
+     │               ╰──────────── Warning (unused_value): Unused function 'compute_kinetic_energy'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\monitor.mbt:149:4 ]
+     │
+ 149 │ fn compute_simple_residual_eq(
+     │    ─────────────┬────────────  
+     │                 ╰────────────── Warning (unused_value): Unused function 'compute_simple_residual_eq'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:140:4 ]
+     │
+ 140 │ fn quick_convection_x(
+     │    ─────────┬────────  
+     │             ╰────────── Warning (unused_value): Unused function 'quick_convection_x'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:163:4 ]
+     │
+ 163 │ fn quick_convection_y(
+     │    ─────────┬────────  
+     │             ╰────────── Warning (unused_value): Unused function 'quick_convection_y'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:185:4 ]
+     │
+ 185 │ fn upwind_convection_x(
+     │    ─────────┬─────────  
+     │             ╰─────────── Warning (unused_value): Unused function 'upwind_convection_x'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:245:4 ]
+     │
+ 245 │ fn pressure_poisson_sor(
+     │    ──────────┬─────────  
+     │              ╰─────────── Warning (unused_value): Unused function 'pressure_poisson_sor'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:278:4 ]
+     │
+ 278 │ fn pressure_poisson_ssor(
+     │    ──────────┬──────────  
+     │              ╰──────────── Warning (unused_value): Unused function 'pressure_poisson_ssor'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:321:4 ]
+     │
+ 321 │ fn pressure_residual_l2(
+     │    ──────────┬─────────  
+     │              ╰─────────── Warning (unused_value): Unused function 'pressure_residual_l2'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:347:4 ]
+     │
+ 347 │ fn upwind_convection_y(
+     │    ─────────┬─────────  
+     │             ╰─────────── Warning (unused_value): Unused function 'upwind_convection_y'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:527:4 ]
+     │
+ 527 │ fn tvd_convection_x(
+     │    ────────┬───────  
+     │            ╰───────── Warning (unused_value): Unused function 'tvd_convection_x'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\schemes.mbt:551:4 ]
+     │
+ 551 │ fn tvd_convection_y(
+     │    ────────┬───────  
+     │            ╰───────── Warning (unused_value): Unused function 'tvd_convection_y'
+─────╯
+Warning: [0001]
+    ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:69:4 ]
+    │
+ 69 │ fn projection_convection_x(
+    │    ───────────┬───────────  
+    │               ╰───────────── Warning (unused_value): Unused function 'projection_convection_x'
+────╯
+Warning: [0001]
+    ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:96:4 ]
+    │
+ 96 │ fn projection_convection_y(
+    │    ───────────┬───────────  
+    │               ╰───────────── Warning (unused_value): Unused function 'projection_convection_y'
+────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:182:4 ]
+     │
+ 182 │ fn projection_gradient_x(
+     │    ──────────┬──────────  
+     │              ╰──────────── Warning (unused_value): Unused function 'projection_gradient_x'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:197:4 ]
+     │
+ 197 │ fn projection_gradient_y(
+     │    ──────────┬──────────  
+     │              ╰──────────── Warning (unused_value): Unused function 'projection_gradient_y'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:359:4 ]
+     │
+ 359 │ fn projection_reconstruct_cell_velocities(
+     │    ───────────────────┬──────────────────  
+     │                       ╰──────────────────── Warning (unused_value): Unused function 'projection_reconstruct_cell_velocities'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:529:4 ]
+     │
+ 529 │ fn projection_divergence_l2(
+     │    ────────────┬───────────  
+     │                ╰───────────── Warning (unused_value): Unused function 'projection_divergence_l2'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:571:4 ]
+     │
+ 571 │ fn projection_compute_diagnostics(
+     │    ───────────────┬──────────────  
+     │                   ╰──────────────── Warning (unused_value): Unused function 'projection_compute_diagnostics'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:718:4 ]
+     │
+ 718 │ fn projection_correct_predictor(
+     │    ──────────────┬─────────────  
+     │                  ╰─────────────── Warning (unused_value): Unused function 'projection_correct_predictor'
+─────╯
+Warning: [0001]
+     ╭─[ D:\FlowLabLite-release\cmd\main\solver_projection_tvd.mbt:794:4 ]
+     │
+ 794 │ fn projection_tvd_step(
+     │    ─────────┬─────────  
+     │             ╰─────────── Warning (unused_value): Unused function 'projection_tvd_step'
+─────╯
+Time step 10/10 completed
+Time step 10/20 completed
+Time step 20/20 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/30 completed
+Time step 20/30 completed
+Time step 30/30 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/500 completed
+Time step 20/500 completed
+Time step 30/500 completed
+Time step 40/500 completed
+Time step 50/500 completed
+Time step 60/500 completed
+Time step 70/500 completed
+Time step 80/500 completed
+Time step 90/500 completed
+Time step 100/500 completed
+Time step 110/500 completed
+Time step 120/500 completed
+Time step 130/500 completed
+Time step 140/500 completed
+Time step 150/500 completed
+Time step 160/500 completed
+Time step 170/500 completed
+Time step 180/500 completed
+Time step 190/500 completed
+Time step 200/500 completed
+Time step 210/500 completed
+Time step 220/500 completed
+Time step 230/500 completed
+Time step 240/500 completed
+Time step 250/500 completed
+Time step 260/500 completed
+Time step 270/500 completed
+Time step 280/500 completed
+Time step 290/500 completed
+Time step 300/500 completed
+Time step 310/500 completed
+Time step 320/500 completed
+Time step 330/500 completed
+Time step 340/500 completed
+Time step 350/500 completed
+Time step 360/500 completed
+Time step 370/500 completed
+Time step 380/500 completed
+Time step 390/500 completed
+Time step 400/500 completed
+Time step 410/500 completed
+Time step 420/500 completed
+Time step 430/500 completed
+Time step 440/500 completed
+Time step 450/500 completed
+Time step 460/500 completed
+Time step 470/500 completed
+Time step 480/500 completed
+Time step 490/500 completed
+Time step 500/500 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/200 completed
+Time step 20/200 completed
+Time step 30/200 completed
+Time step 40/200 completed
+Time step 50/200 completed
+Time step 60/200 completed
+Time step 70/200 completed
+Time step 80/200 completed
+Time step 90/200 completed
+Time step 100/200 completed
+Time step 110/200 completed
+Time step 120/200 completed
+Time step 130/200 completed
+Time step 140/200 completed
+Time step 150/200 completed
+Time step 160/200 completed
+Time step 170/200 completed
+Time step 180/200 completed
+Time step 190/200 completed
+Time step 200/200 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+PCG step 10/50: pressure iters=78
+PCG step 20/50: pressure iters=69
+PCG step 30/50: pressure iters=63
+PCG step 40/50: pressure iters=60
+PCG step 50/50: pressure iters=59
+PCG step 10/10: pressure iters=78
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+PCG step 10/100: pressure iters=78
+PCG step 20/100: pressure iters=69
+PCG step 30/100: pressure iters=63
+PCG step 40/100: pressure iters=60
+PCG step 50/100: pressure iters=59
+PCG step 60/100: pressure iters=45
+PCG step 70/100: pressure iters=32
+PCG step 80/100: pressure iters=39
+PCG step 90/100: pressure iters=33
+PCG step 100/100: pressure iters=34
+PCG step 10/200: pressure iters=78
+PCG step 20/200: pressure iters=69
+PCG step 30/200: pressure iters=63
+PCG step 40/200: pressure iters=60
+PCG step 50/200: pressure iters=59
+PCG step 60/200: pressure iters=45
+PCG step 70/200: pressure iters=32
+PCG step 80/200: pressure iters=39
+PCG step 90/200: pressure iters=33
+PCG step 100/200: pressure iters=34
+PCG step 110/200: pressure iters=39
+PCG step 120/200: pressure iters=40
+PCG step 130/200: pressure iters=41
+PCG step 140/200: pressure iters=43
+PCG step 150/200: pressure iters=43
+PCG step 160/200: pressure iters=43
+PCG step 170/200: pressure iters=43
+PCG step 180/200: pressure iters=42
+PCG step 190/200: pressure iters=42
+PCG step 200/200: pressure iters=42
+Time step 10/10 completed
+PCG step 10/10: pressure iters=78
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/200: pressure iters=133
+MAC step 20/200: pressure iters=124
+MAC step 30/200: pressure iters=111
+MAC step 40/200: pressure iters=100
+MAC step 50/200: pressure iters=71
+MAC step 60/200: pressure iters=70
+MAC step 70/200: pressure iters=69
+MAC step 80/200: pressure iters=67
+MAC step 90/200: pressure iters=64
+MAC step 100/200: pressure iters=64
+MAC step 110/200: pressure iters=61
+MAC step 120/200: pressure iters=61
+MAC step 130/200: pressure iters=60
+MAC step 140/200: pressure iters=60
+MAC step 150/200: pressure iters=58
+MAC step 160/200: pressure iters=58
+MAC step 170/200: pressure iters=57
+MAC step 180/200: pressure iters=57
+MAC step 190/200: pressure iters=47
+MAC step 200/200: pressure iters=46
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/10 completed
+Time step 10/10 completed
+Time step 10/20 completed
+Time step 20/20 completed
+MAC step 10/200: pressure iters=133
+MAC step 20/200: pressure iters=124
+MAC step 30/200: pressure iters=111
+MAC step 40/200: pressure iters=100
+MAC step 50/200: pressure iters=71
+MAC step 60/200: pressure iters=70
+MAC step 70/200: pressure iters=69
+MAC step 80/200: pressure iters=67
+MAC step 90/200: pressure iters=64
+MAC step 100/200: pressure iters=64
+MAC step 110/200: pressure iters=61
+MAC step 120/200: pressure iters=61
+MAC step 130/200: pressure iters=60
+MAC step 140/200: pressure iters=60
+MAC step 150/200: pressure iters=58
+MAC step 160/200: pressure iters=58
+MAC step 170/200: pressure iters=57
+MAC step 180/200: pressure iters=57
+MAC step 190/200: pressure iters=47
+MAC step 200/200: pressure iters=46
+PCG step 10/200: pressure iters=78
+PCG step 20/200: pressure iters=69
+PCG step 30/200: pressure iters=63
+PCG step 40/200: pressure iters=60
+PCG step 50/200: pressure iters=59
+PCG step 60/200: pressure iters=45
+PCG step 70/200: pressure iters=32
+PCG step 80/200: pressure iters=39
+PCG step 90/200: pressure iters=33
+PCG step 100/200: pressure iters=34
+PCG step 110/200: pressure iters=39
+PCG step 120/200: pressure iters=40
+PCG step 130/200: pressure iters=41
+PCG step 140/200: pressure iters=43
+PCG step 150/200: pressure iters=43
+PCG step 160/200: pressure iters=43
+PCG step 170/200: pressure iters=43
+PCG step 180/200: pressure iters=42
+PCG step 190/200: pressure iters=42
+PCG step 200/200: pressure iters=42
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/10 completed
+Total tests: 176, passed: 176, failed: 0.
+
+exit code: 0

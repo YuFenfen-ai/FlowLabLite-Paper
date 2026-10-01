@@ -1,0 +1,80 @@
+== 4.3 Table 3 (Re=100 row, g129, 40000 steps) ==
+  [PASS] u rel L2 %: computed=2.564
+  [PASS] u max err %: computed=1.984
+  [PASS] v rel L2 %: computed=3.982
+  [PASS] v max err %: computed=0.877
+== 4.4 Table 4 ==
+  [PASS] 65x65 u rel L2: computed=2.59
+  [PASS] 65x65 u max: computed=2.201
+  [PASS] 65x65 v rel L2: computed=2.243
+  [PASS] 65x65 v max: computed=0.483
+  [PASS] 129x129 u rel L2: computed=2.564
+  [PASS] 129x129 u max: computed=1.984
+  [PASS] 129x129 v rel L2: computed=3.982
+  [PASS] 129x129 v max: computed=0.877
+  [PASS] 257x257 u rel L2: computed=1.983
+  [PASS] 257x257 u max: computed=1.552
+  [PASS] 257x257 v rel L2: computed=3.621
+  [PASS] 257x257 v max: computed=0.78
+  [PASS] order u 65->129: computed=0.15
+  [PASS] order u 129->257: computed=0.35
+  [PASS] order v 65->129: computed=-0.86
+  [PASS] order v 129->257: computed=0.17
+  [PASS] div norm g65: computed=0.0097
+  [PASS] div norm g129: computed=0.0087
+  [PASS] div norm g257: computed=0.0063
+  [PASS] u_min g65: computed=-0.197
+  [PASS] u_min g129: computed=-0.193
+  [PASS] u_min g257: computed=-0.196
+  [PASS] g257 u relL2 @5k %: computed=13.6
+  [PASS] g257 u relL2 @10k %: computed=7.1
+  [PASS] g257 u relL2 @20k %: computed=2.4
+  [PASS] g257 u relL2 @40k %: computed=2.0
+  [PASS] g257 u_change 20k->40k %: computed=4.2
+  [PASS] g257 v_change 20k->40k %: computed=8.0
+  [PASS] g65 v_change %: computed=0.7
+  [PASS] g129 u_change %: computed=0.33
+  [PASS] g257 physical end time: computed=20.0
+  [PASS] diffusion number g257 dt=0.001: computed=0.33
+  [PASS] diffusion number g257 dt=0.0005: computed=0.16
+== 4.5 Table 5 (recomputed from field CSV) ==
+  [PASS] primary x*: computed=0.6094
+  [PASS] primary y*: computed=0.7266
+  [PASS] primary psi*: computed=-0.0931
+  [PASS] u_min: computed=-0.1931
+  [PASS] v_min: computed=-0.237
+  [PASS] BL1 x*: computed=0.0312
+  [PASS] BL1 y*: computed=0.0391
+  [PASS] BL1 psi* (text 1.6e-6): computed=1.6e-06
+  [PASS] BR1 x*: computed=0.9453
+  [PASS] BR1 y*: computed=0.0547
+  [PASS] BR1 psi* (text 9.1e-6): computed=9.1e-06
+  [PASS] dev x*: computed=0.0068
+  [PASS] dev y*: computed=0.0107
+  [PASS] dev psi %: computed=10.0
+  [PASS] dev u_min %: computed=9.8
+  [PASS] dev v_min %: computed=6.6
+== 4.6 Table 6 (recomputed from bous CSVs; u*=20u, v*=20v) ==
+  [PASS] Ra=1e3 Nu: computed=1.166
+  [PASS] Ra=1e3 u*: computed=3.356
+  [PASS] Ra=1e3 v*: computed=4.005
+  [PASS] Ra=1e3 plateau rel change <1e-4 (got 4.24e-07): computed=True
+  [PASS] Ra=1e3 Nu error vs bench: computed=4.3
+  [PASS] Ra=1e3 u* err vs bench: computed=-8.0
+  [PASS] Ra=1e4 Nu: computed=2.633
+  [PASS] Ra=1e4 u*: computed=16.08
+  [PASS] Ra=1e4 v*: computed=23.18
+  [PASS] Ra=1e4 plateau rel change <1e-4 (got 0.00e+00): computed=True
+  [PASS] Ra=1e4 Nu error vs bench: computed=17.7
+  [PASS] Ra=1e4 u* err vs bench: computed=-0.6
+  [PASS] Ra=1e5 Nu: computed=6.397
+  [PASS] Ra=1e5 u*: computed=39.5
+  [PASS] Ra=1e5 v*: computed=93.31
+  [PASS] Ra=1e5 plateau rel change <1e-4 (got 0.00e+00): computed=True
+  [PASS] Ra=1e5 Nu error vs bench: computed=41.6
+  [PASS] Ra=1e5 u* err vs bench: computed=13.5
+  [PASS] Ra mapping beta=0.8875: computed=1000
+  [PASS] Ra mapping beta=8.875: computed=10000
+  [PASS] Ra mapping beta=88.75: computed=100000
+
+RESULT: 74 checks passed, 0 failed

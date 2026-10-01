@@ -1,0 +1,17 @@
+# Full-field export (section 4.5), run from the worktree root
+# D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\high-re-projection-tvd :
+#   moon run cmd/main --release --target wasm -- --format csv --solver chorin --grid 129 --re 100 --steps 40000 > field_re100_g129.csv
+# HEADER NOTE: an earlier build printed "Re=20" in this header (io_formats.mbt read the
+# compile-time nu). Fixed 2026-09-30 in all four export headers (CSV/VTK/Tecplot/VTI) by reading
+# g_nu_runtime[0]; the regenerated field_re100_g129.csv reads Re=100 and its 16,643 data lines are
+# byte-identical to the original archive (numerics untouched; 176 tests pass).
+
+# Boussinesq De Vahl Davis runs (section 4.6), same worktree root:
+#   moon run cmd/main --release --target wasm -- --format centerline --solver boussinesq \
+#     --bous-nu 0.071 --bous-alpha 0.1 --bous-beta 0.8875 \
+#     --checkpoints 4000,8000,...,60000 > bous_ra1e3.csv
+#   ... --bous-beta 8.875  ... > bous_ra1e4.csv
+#   ... --bous-beta 88.75  ... > bous_ra1e5.csv
+# Ra = beta*L^3/(nu*alpha) = beta*8/0.0071 = 1126.76*beta; Pr = nu/alpha = 0.71.
+# Built-in 41 x 41 grid; dt = 0.001 (compile-time); solver code path: cmd/main/solver_boussinesq.mbt.
+# Grid-convergence runs (section 4.4) were produced by validation/run_ghia_study.py, see run_manifest.json.

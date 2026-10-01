@@ -51,17 +51,18 @@ def split_checkpoint_stream(stream: str) -> dict[int, str]:
 
 
 def build_solver_command(
-    moon: Path, grid: int, checkpoints: Sequence[int], reynolds: int
+    moon: Path, grid: int, checkpoints: Sequence[int], reynolds: int, dt: float = 0.001
 ) -> list[str]:
     return [
         str(moon), "run", "cmd/main", "--release", "--target", "wasm", "--",
         "--format", "centerline", "--solver", "chorin", "--grid", str(grid),
         "--checkpoints", ",".join(str(step) for step in checkpoints), "--re", str(reynolds),
+        "--dt", format(dt, "g"),
     ]
 
 
-def _write_pointwise(selected_path: Path, output_path: Path, reynolds: int) -> None:
-    data = parse_centerline(selected_path, expected_re=reynolds)
+def _write_pointwise(selected_path: Path, output_path: Path, reynolds: int, dt: float) -> None:
+    data = parse_centerline(selected_path, expected_re=reynolds, expected_dt=dt)
     reference = GHIA_REFERENCE[reynolds]
     u_predicted = interpolate(data.u_coord, data.u_value, reference["u_coord"])
     v_predicted = interpolate(data.v_coord, data.v_value, reference["v_coord"])
@@ -86,16 +87,17 @@ def run_case(
     checkpoints: Sequence[int],
     reynolds: int,
     *,
+    dt: float,
     resume: bool,
 ) -> dict[str, object]:
     case_dir = output_root / f"re{reynolds}" / f"g{grid}"
     case_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_paths = {step: case_dir / f"centerline_s{step}.csv" for step in checkpoints}
     can_resume = resume and all(path.is_file() for path in checkpoint_paths.values())
-    command = build_solver_command(moon, grid, checkpoints, reynolds)
+    command = build_solver_command(moon, grid, checkpoints, reynolds, dt)
     if can_resume:
         for path in checkpoint_paths.values():
-            data = parse_centerline(path, expected_re=reynolds)
+            data = parse_centerline(path, expected_re=reynolds, expected_dt=dt)
             if data.metadata["grid"] != f"{grid}x{grid}":
                 raise ValueError(f"resume file has the wrong grid: {path}")
         elapsed_seconds = None
@@ -113,14 +115,14 @@ def run_case(
         for step, text in blocks.items():
             path = checkpoint_paths[step]
             path.write_text(text, encoding="utf-8")
-            data = parse_centerline(path, expected_re=reynolds)
+            data = parse_centerline(path, expected_re=reynolds, expected_dt=dt)
             if data.metadata["grid"] != f"{grid}x{grid}":
                 raise ValueError(f"solver emitted the wrong grid for step {step}")
 
     summary_csv = case_dir / "time_convergence.csv"
     summary_json = case_dir / "time_convergence.json"
-    summary = write_summary(tuple(checkpoint_paths.values()), summary_csv, summary_json)
-    _write_pointwise(checkpoint_paths[checkpoints[-1]], case_dir / "pointwise_errors.csv", reynolds)
+    summary = write_summary(tuple(checkpoint_paths.values()), summary_csv, summary_json, expected_dt=dt)
+    _write_pointwise(checkpoint_paths[checkpoints[-1]], case_dir / "pointwise_errors.csv", reynolds, dt)
     manifest = {
         "re": reynolds,
         "grid": grid,
@@ -148,6 +150,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--grid", type=int, default=129)
     parser.add_argument("--checkpoints", type=int, nargs="+", default=(5000, 10000, 20000))
     parser.add_argument("--re", type=int, nargs="+", default=(100, 400, 1000))
+    parser.add_argument("--dt", type=float, default=0.001)
     parser.add_argument("--resume", action="store_true")
     arguments = parser.parse_args(argv)
     checkpoints = tuple(arguments.checkpoints)
@@ -155,13 +158,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         right <= left for left, right in zip(checkpoints, checkpoints[1:])
     ):
         parser.error("--checkpoints must be strictly increasing positive integers")
+    if arguments.dt <= 0.0:
+        parser.error("--dt must be positive")
     unsupported = set(arguments.re) - set(GHIA_REFERENCE)
     if unsupported:
         parser.error(f"no Ghia data configured for Re={sorted(unsupported)}")
     manifests = [
         run_case(
             arguments.repo.resolve(), arguments.moon.resolve(), arguments.output_root.resolve(),
-            arguments.grid, checkpoints, reynolds, resume=arguments.resume,
+            arguments.grid, checkpoints, reynolds, dt=arguments.dt, resume=arguments.resume,
         )
         for reynolds in arguments.re
     ]

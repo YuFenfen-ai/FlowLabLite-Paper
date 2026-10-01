@@ -1,3 +1,8 @@
+> 历史说明：本文档撰写于开发期（v0.2，2026-04-18），彼时仓库仍包含 3D 求解器包（165 项测试，含 main3d）。当前发布树已移除 3D 包并加入 Projection-TVD 扩展（176 项测试，见 TEST_RESULTS.log 与 docs/test_report.md）；文中涉及 main3d / 3D 的内容仅作开发期历史记录保留。
+
+> 历史说明：本文档撰写于开发期（v0.2，2026-04-18），彼时仓库仍包含 3D 求解器包（165 项测试，含 main3d）。当前发布树已移除 3D 包并加入 Projection-TVD 扩展（176 项测试，见 TEST_RESULTS.log 与 docs/test_report.md）；文中涉及 main3d / 3D 的内容仅作开发期历史记录保留。
+
+
 # FlowLabLite — 功能清单（Feature Inventory）
 
 **版本：** v0.2 · 2026-04-18  

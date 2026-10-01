@@ -857,7 +857,7 @@ test "runtime_re_100_gives_nu_0_02" {
 test "centerline_csv_row_count" {
   let nc = 5
   let s  = make_test_export("chorin", nc, 1.0, 0.5, 0.0)
-  let out = format_centerline_csv(s, 20.0, 0.0)
+  let out = format_centerline_csv(s, 20.0, 0.001, 0.0)
   let mut u_rows = 0
   let mut v_rows = 0
   out.split("\n").each(fn(line) {
@@ -870,7 +870,7 @@ test "centerline_csv_row_count" {
 
 test "centerline_csv_runtime_metadata" {
   let s = make_test_export("chorin", 5, 1.0, 0.5, 0.0)
-  let out = format_centerline_csv(s, 100.0, 0.0125)
+  let out = format_centerline_csv(s, 100.0, 0.001, 0.0125)
   assert_true(out.contains("Re=100"))
   assert_true(out.contains("grid=5x5"))
   assert_true(out.contains("h=0.5"))
@@ -883,7 +883,7 @@ test "runtime_grid_81_centerline_rows" {
   set_grid_size(81, 81)
   init_simulation()
   let s = collect_solver_exports("chorin")[0]
-  let out = format_centerline_csv(s, 100.0, get_divergence_norm())
+  let out = format_centerline_csv(s, 100.0, get_dt(), get_divergence_norm())
   let mut rows = 0
   out.split("\n").each(fn(line) {
     if line.has_prefix("u_vcl,") { rows = rows + 1 }

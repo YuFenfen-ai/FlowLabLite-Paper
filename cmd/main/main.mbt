@@ -31,6 +31,7 @@ let dy : Double = 2.0 / (ny - 1).to_double()
 let rho = 1.0
 let nu = 0.1
 let dt = 0.001
+let g_chorin_dt : Array[Double] = [dt]
 
 // ── Runtime grid size (Step K Phase 1 — Chorin solver only) ──────────────────
 // g_nx / g_ny can be changed by set_grid_size() before init_simulation().
@@ -121,7 +122,7 @@ pub fn get_dx() -> Double { g_dx[0] }
 pub fn get_dy() -> Double { g_dy[0] }
 
 /// Return time step size dt.
-pub fn get_dt() -> Double { dt }
+pub fn get_dt() -> Double { g_chorin_dt[0] }
 
 /// Return fluid density rho.
 pub fn get_rho() -> Double { rho }
@@ -146,6 +147,11 @@ pub fn set_grid_size(nx_ : Int, ny_ : Int) -> Unit {
   g_u[0] = create_zeros_2d(ny_c, nx_c)
   g_v[0] = create_zeros_2d(ny_c, nx_c)
   g_p[0] = create_zeros_2d(ny_c, nx_c)
+}
+
+/// Set the Chorin solver time step. Other solvers retain the compile-time default.
+pub fn set_chorin_dt(dt_ : Double) -> Unit {
+  if dt_ > 0.0 { g_chorin_dt[0] = dt_ }
 }
 
 /// Reset the Chorin solver state to zero for a fresh simulation.
@@ -282,7 +288,7 @@ pub fn run_n_steps(n : Int) -> Unit {
   let ny_ = g_ny[0]
   let dx_ = g_dx[0]
   let dy_ = g_dy[0]
-  cavity_flow_array(n, g_u[0], g_v[0], dt, dx_, dy_, g_p[0], rho, g_nu_runtime[0], nx_, ny_) |> ignore
+  cavity_flow_array(n, g_u[0], g_v[0], g_chorin_dt[0], dx_, dy_, g_p[0], rho, g_nu_runtime[0], nx_, ny_) |> ignore
   g_steps[0] = g_steps[0] + n
 }
 
@@ -292,7 +298,7 @@ pub fn run_all_steps() -> Unit {
   let ny_ = g_ny[0]
   let dx_ = g_dx[0]
   let dy_ = g_dy[0]
-  cavity_flow_array(nt, g_u[0], g_v[0], dt, dx_, dy_, g_p[0], rho, g_nu_runtime[0], nx_, ny_) |> ignore
+  cavity_flow_array(nt, g_u[0], g_v[0], g_chorin_dt[0], dx_, dy_, g_p[0], rho, g_nu_runtime[0], nx_, ny_) |> ignore
   g_steps[0] = nt
 }
 
@@ -2639,6 +2645,9 @@ fn main {
     let projection_dt = parse_positive_double(
       cli_get_string(_cli_args, "--dt", "0.001"), -1.0,
     )
+    if solver_filter == "chorin" && projection_dt > 0.0 {
+      set_chorin_dt(projection_dt)
+    }
     let projection_pressure_tol = parse_positive_double(
       cli_get_string(_cli_args, "--pressure-tol", "1e-6"), -1.0,
     )
@@ -2675,6 +2684,57 @@ fn main {
       }
     }
     let checkpoints_str = cli_get_string(_cli_args, "--checkpoints", "")
+    if solver_filter == "boussinesq" {
+      // De Vahl Davis (1983) differentially heated cavity: built-in 41x41 grid,
+      // dt = 0.001.  Nu at the hot wall plus extremes of u on the vertical
+      // mid-line and of v on the horizontal mid-line, one CSV row per checkpoint.
+      let fmt = cli_get_string(_cli_args, "--format", "")
+      if fmt != "centerline" {
+        println("[io] boussinesq currently requires --format centerline.")
+        return
+      }
+      let checkpoints = if checkpoints_str.length() > 0 {
+        parse_checkpoint_steps(checkpoints_str)
+      } else {
+        []
+      }
+      if checkpoints.is_empty() {
+        println("[io] boussinesq requires --checkpoints (e.g. --checkpoints 2000,4000).")
+        return
+      }
+      set_bous_nu(parse_positive_double(cli_get_string(_cli_args, "--bous-nu", "0.071"), 0.071))
+      set_bous_alpha(parse_positive_double(cli_get_string(_cli_args, "--bous-alpha", "0.1"), 0.1))
+      set_bous_beta(parse_positive_double(cli_get_string(_cli_args, "--bous-beta", "0.8875"), 0.8875))
+      init_boussinesq()
+      println("step,time,nusselt,u_max_vc,y_u_max,v_max_hc,x_v_max")
+      let mid_i = (ny - 1) / 2
+      let mid_j = (nx - 1) / 2
+      for cp_index = 0; cp_index < checkpoints.length(); cp_index = cp_index + 1 {
+        let target_step = checkpoints[cp_index]
+        run_boussinesq_n_steps(target_step - get_bous_step_count())
+        let mut u_max = -1.0e18
+        let mut y_u_max = 0.0
+        for i = 0; i < ny; i = i + 1 {
+          let val = get_u_bous_at(i, mid_j)
+          if val > u_max {
+            u_max = val
+            y_u_max = i.to_double() * dy
+          }
+        }
+        let mut v_max = -1.0e18
+        let mut x_v_max = 0.0
+        for j = 0; j < nx; j = j + 1 {
+          let val = get_v_bous_at(mid_i, j)
+          if val > v_max {
+            v_max = val
+            x_v_max = j.to_double() * dx
+          }
+        }
+        let t = get_bous_step_count().to_double() * dt
+        println("\{get_bous_step_count()},\{t},\{get_bous_nusselt()},\{u_max},\{y_u_max},\{v_max},\{x_v_max}")
+      }
+      return
+    }
     if checkpoints_str.length() > 0 {
       let fmt = cli_get_string(_cli_args, "--format", "")
       let checkpoints = parse_checkpoint_steps(checkpoints_str)
@@ -2710,7 +2770,7 @@ fn main {
           let target_step = checkpoints[checkpoint_index]
           run_n_steps(target_step - get_step_count())
           let s = collect_solver_exports("chorin")[0]
-          println(format_centerline_csv(s, 2.0 / g_nu_runtime[0], get_divergence_norm()))
+          println(format_centerline_csv(s, 2.0 / g_nu_runtime[0], g_chorin_dt[0], get_divergence_norm()))
         }
       }
       return

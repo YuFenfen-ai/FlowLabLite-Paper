@@ -4,7 +4,7 @@ FlowLabLite is a lightweight, AI-native CFD solver for 2D lid-driven cavity flow
 written in [MoonBit](https://www.moonbitlang.com/).
 It compiles to WebAssembly (wasm-gc) and ships an interactive browser-based
 visualization page (`cmd/main/main.html`) — including velocity heatmaps, pressure
-heatmaps, and **streamline** overlay — with no runtime dependencies. 3D lid-driven cavity flow is partially supported, hence it is not declared.
+heatmaps, and **streamline** overlay — with no runtime dependencies.
 
 > **Online Demo**: serve the repo over HTTP and open `cmd/main/main.html` in Chrome 115+.  
 > See [INSTALL.md](INSTALL.md) for one-command local serving instructions.
@@ -30,39 +30,41 @@ Four independent solvers are provided:
 ```
 FlowLabLite/
 ├── cmd/main/
-│   ├── main.mbt              # All solver code (Chorin + SIMPLE + PCG + MAC) + WASM API
+│   ├── main.mbt              # Solver control, all solver paths + WASM API
 │   ├── main_bench.mbt        # Micro-benchmark (fib baseline)
 │   ├── main_wbtest.mbt       # White-box tests T1–T58 (original suite)
-│   ├── main_ext_wbtest.mbt   # White-box tests T59–T152 (unit/integration/system/regression/I/O/3D/extended)
+│   ├── main_ext_wbtest.mbt   # White-box tests T59–T154 (extended suite)
+│   ├── solver_projection_tvd.mbt  # Projection-TVD extension (Section 6)
 │   ├── main.html             # Browser visualization (heatmaps + streamline overlay)
 │   ├── local_viewer.html     # Browser viewer for locally computed JSON (4-solver tabs)
 │   ├── moon.pkg.json         # Package config: imports, link/exports (121 functions)
 │   └── ...                   # Other solver and I/O modules
-├── cmd/main3d/               # 3D solver (main3d.mbt, main3d.html, etc.)
 ├── lib/
 │   └── moon.pkg.json         # Library package placeholder
-├── docs/                     # Documentation (see below for details)
+├── docs/                     # Documentation; launch guide: docs/launch.md
 ├── examples/                 # Example CLI and AI workflow
-├── build_wasm.sh             # 2D WASM build script (full export)
-├── build_wasm_3d.sh          # 3D WASM build script
+├── validation/               # Validation harness + raw run archives (Sections 4.3-4.6)
+├── data/                     # Paper data: data/paper/ (curated) + 17-point Ghia CSVs
+├── build_wasm.sh             # WASM build script (explicit 121-function export list)
 ├── run_local.sh              # Run solver locally + extract JSON results
-├── server.js                 # Node.js static server (npm alternative to python)
+├── TEST_RESULTS.log          # Recorded moon test output (176 passed / 0 failed)
 ├── LICENSE                   # Apache-2.0
-└── ...
-```
+└── ...```
 
 ---
 
 
 ## Test Suite
 
-**165 tests, all passing** (`moon test --target wasm`)
+**176 tests, all passing** (`moon test cmd/main --target wasm`, recorded in `TEST_RESULTS.log`)
 
 - `cmd/main/main_wbtest.mbt` — T1–T58 (core/physics/preconditioner)
-- `cmd/main/main_ext_wbtest.mbt` — T59–T152 (unit/integration/system/regression/I/O/3D/extended)
-- `cmd/main3d/main3d_wbtest.mbt` — 3D solver tests
+- `cmd/main/main_ext_wbtest.mbt` — T59–T154 (extended suite)
+- `cmd/main/validation_cli_wbtest.mbt` — 3 (CLI filtering, checkpoint and time-step constraints)
+- `cmd/main/solver_projection_tvd_wbtest.mbt` — 19 (Projection-TVD extension, Section 6)
 
-See [docs/test_report_20260417.md](docs/test_report_20260417.md) and [docs/test_report_io_20260418.md](docs/test_report_io_20260418.md) for details.
+See [docs/test_report.md](docs/test_report.md) for the recorded per-test report and
+[data/paper/](data/paper/) for the paper's quantitative data.
 
 ---
 
@@ -72,10 +74,10 @@ See [docs/test_report_20260417.md](docs/test_report_20260417.md) and [docs/test_
 |------------------|-----------------|--------------|
 | moon (MoonBit)   | 0.1.20260309    | [Official website](https://www.moonbitlang.com/download/) |
 | moonc (compiler) | 0.8.3           | bundled      |
-| node             | 18+             | [Node.js official](https://nodejs.org/) (for npm server) |
+| node             | 18+             | [Node.js official](https://nodejs.org/) (export check in build_wasm.sh) |
 | python           | 3.x             | (for python http.server) |
 | Chrome/Edge/Brave| 115+            | Browser support for wasm-gc stringref |
-| Any HTTP server  |                 | Recommended: python or node (server.js) |
+| Any HTTP server  |                 | Recommended: python |
 
 ### Starting Local Server
 
@@ -84,13 +86,7 @@ See [docs/test_report_20260417.md](docs/test_report_20260417.md) and [docs/test_
 	python -m http.server 8080
 	# Open http://localhost:8080/cmd/main/main.html
 	```
-2. **Node.js (npm server)**:
-	```bash
-	npm install
-	node server.js 8080
-	# Or directly: node server.js
-	# Open http://localhost:8080/cmd/main/main.html
-	```
+
 
 ---
 
@@ -102,7 +98,8 @@ See [docs/test_report_20260417.md](docs/test_report_20260417.md) and [docs/test_
 | [api_reference.md](docs/api_reference.md) | All WASM exported function signatures |
 | [dev_guide.md](docs/dev_guide.md) | Development environment, AI-assisted workflow |
 | [ghia_validation.md](docs/ghia_validation.md) | Ghia (1982) numerical benchmark validation |
-| [test_report.md](docs/test_report.md) | Complete test validation (165 tests: T1–T152 + 3D) |
+| [test_report.md](docs/test_report.md) | Two-dimensional test-suite report |
+| [launch.md](docs/launch.md) | Browser build/launch guide + paper reproduction commands |
 | [preconditioner_theory.md](docs/preconditioner_theory.md) | Preconditioner mathematical theory |
 | [preconditioner_plan.md](docs/preconditioner_plan.md) | Preconditioner implementation plan |
 | [flow.md](docs/flow.md) | Execution flow diagrams (Mermaid) |
@@ -195,12 +192,12 @@ cd FlowLabLite
 ### 3. Run the tests
 
 ```bash
-moon test --target wasm    # runs all 165 tests (T1–T58 + T59–T152 + 3D)
+moon test cmd/main --target wasm    # runs all 176 tests
 ```
 
 Expected output:
 ```
-Total tests: 165, passed: 165, failed: 0
+Total tests: 176, passed: 176, failed: 0
 ```
 
 ### 4. Build the WASM binary
@@ -210,7 +207,7 @@ bash build_wasm.sh release    # optimised build
 bash build_wasm.sh            # debug build
 ```
 
-The script prints the export list (62 functions + `_start` + `memory` = 64 symbols).
+The script prints the export list (121 functions + `_start` + `memory` = 123 symbols).
 
 ### 5. Serve over HTTP
 
@@ -329,137 +326,55 @@ Staggered arrangement with PCG pressure solve:
 
 ---
 
-## WASM Exports (62 functions)
+## WASM Exports (121 functions)
 
 **Chorin solver (27):**
-`init_simulation`, `run_all_steps`, `run_n_steps`,
-`get_nx`, `get_ny`, `get_nt`, `get_nit`, `get_re`, `get_dx`, `get_dy`, `get_dt`, `get_rho`, `get_nu`,
-`get_step_count`, `get_u_at`, `get_v_at`, `get_p_at`,
-`get_velocity_magnitude_at`, `get_max_velocity_magnitude`,
-`get_u_center`, `get_v_center`, `get_p_center`,
-`get_divergence_norm`, `get_max_u`, `get_max_v`, `get_max_p`, `get_min_p`
+`init_simulation`, `run_all_steps`, `run_n_steps`, `get_nx`, `get_ny`, `get_nt`, `get_nit`, `get_re`, `get_dx`, `get_dy`, `get_dt`, `get_rho`, `get_nu`, `get_step_count`, `get_u_at`, `get_velocity_magnitude_at`, `get_v_at`, `get_p_at`, `get_u_center`, `get_v_center`, `get_p_center`, `get_divergence_norm`, `get_max_velocity_magnitude`, `get_max_u`, `get_max_v`, `get_max_p`, `get_min_p`
 
-**SIMPLE solver (11):**
-`init_simple`, `run_simple_n_iter`,
-`get_simple_step_count`, `get_simple_residual`,
-`get_u_simple_at`, `get_v_simple_at`, `get_p_simple_at`,
-`get_max_u_simple`, `get_simple_divergence_norm`
+**SIMPLE solver (9):**
+`init_simple`, `run_simple_n_iter`, `get_simple_step_count`, `get_simple_residual`, `get_u_simple_at`, `get_v_simple_at`, `get_p_simple_at`, `get_max_u_simple`, `get_simple_divergence_norm`
 
 **Chorin-PCG collocated solver (13):**
-`init_chorin_pcg`, `run_chorin_pcg_n_steps`,
-`get_pcg_step_count`, `get_pcg_last_iters`,
-`get_u_pcg_at`, `get_v_pcg_at`, `get_p_pcg_at`,
-`get_velocity_magnitude_pcg_at`, `get_max_u_pcg`, `get_max_v_pcg`,
-`get_max_p_pcg`, `get_min_p_pcg`, `get_pcg_divergence_norm`
+`init_chorin_pcg`, `run_chorin_pcg_n_steps`, `get_pcg_step_count`, `get_pcg_last_iters`, `get_u_pcg_at`, `get_v_pcg_at`, `get_p_pcg_at`, `get_velocity_magnitude_pcg_at`, `get_max_u_pcg`, `get_max_v_pcg`, `get_max_p_pcg`, `get_min_p_pcg`, `get_pcg_divergence_norm`
 
 **MAC staggered solver (14):**
-`init_mac`, `run_mac_n_steps`,
-`get_mac_step_count`, `get_mac_last_iters`, `get_mac_nc`,
-`get_u_mac_at`, `get_v_mac_at`, `get_p_mac_at`,
-`get_velocity_magnitude_mac_at`,
-`get_max_u_mac`, `get_max_v_mac`, `get_max_p_mac`, `get_min_p_mac`,
-`get_mac_divergence_norm`
+`init_mac`, `run_mac_n_steps`, `get_mac_step_count`, `get_mac_last_iters`, `get_mac_nc`, `get_u_mac_at`, `get_v_mac_at`, `get_p_mac_at`, `get_velocity_magnitude_mac_at`, `get_max_u_mac`, `get_max_v_mac`, `get_max_p_mac`, `get_min_p_mac`, `get_mac_divergence_norm`
+
+**RK3 solver (7):**
+`init_rk3`, `run_rk3_n_steps`, `get_rk3_step_count`, `get_u_rk3_at`, `get_v_rk3_at`, `get_p_rk3_at`, `get_rk3_divergence_norm`
+
+**Finite-volume verification (7):**
+`init_fvm`, `run_fvm_n_iter`, `get_fvm_step_count`, `get_u_fvm_at`, `get_v_fvm_at`, `get_p_fvm_at`, `get_fvm_divergence_norm`
+
+**Scalar transport (7):**
+`init_scalar`, `set_scalar_alpha`, `get_scalar_alpha`, `run_scalar_n_steps`, `get_scalar_step_count`, `get_scalar_at`, `get_scalar_mean`
+
+**Boussinesq natural convection (14):**
+`init_boussinesq`, `set_bous_nu`, `set_bous_alpha`, `set_bous_beta`, `get_bous_nu`, `get_bous_alpha`, `get_bous_beta`, `run_boussinesq_n_steps`, `get_bous_step_count`, `get_u_bous_at`, `get_v_bous_at`, `get_p_bous_at`, `get_phi_bous_at`, `get_bous_nusselt`
+
+**Channel flow (10):**
+`init_channel`, `set_channel_fx`, `set_channel_nu`, `get_channel_fx`, `run_channel_n_steps`, `get_channel_step_count`, `get_u_channel_at`, `get_v_channel_at`, `get_p_channel_at`, `get_channel_analytic_u`
+
+**Grid utilities & curvilinear coordinates (13):**
+`set_grid_size`, `get_tanh_y_at`, `get_tanh_dy_at`, `get_tanh_mean_dy`, `set_curv_c`, `get_curv_c`, `get_curv_x_at`, `get_curv_y_at`, `get_curv_jacobian_at`, `get_curv_nonortho_at`, `get_curv_g11_at`, `get_curv_g12_at`, `get_curv_g22_at`
 
 ---
 
 ## Test Report
 
-### Running tests
-
 ```bash
-moon test --target wasm      # 165 tests on wasm target
+moon test cmd/main --target wasm      # 176 tests on the wasm target
 ```
 
-### Test summary (165 tests, all passing)
-
-Three test files are discovered automatically:
+All 176 tests pass in the recorded run (see `TEST_RESULTS.log`):
 - `cmd/main/main_wbtest.mbt` — T1–T58 (core solvers + preconditioners)
-- `cmd/main/main_ext_wbtest.mbt` — T59–T152 (extended: unit/integration/system/regression/I/O/3D/advanced)
-- `cmd/main3d/main3d_wbtest.mbt` — 3D solver tests (13 basic tests)
+- `cmd/main/main_ext_wbtest.mbt` — T59–T154 (extended suite)
+- `cmd/main/validation_cli_wbtest.mbt` — 3 (CLI constraints, Sections 4.3-4.4)
+- `cmd/main/solver_projection_tvd_wbtest.mbt` — 19 (Projection-TVD extension, Section 6)
 
-#### Chorin solver (T1–T16)
-
-| # | Test name | Validates |
-|---|---|---|
-| 1 | `create_zeros_2d` | Array utility: correct dimensions, all-zero init |
-| 2 | `copy_2d_array` | Deep copy, source independence |
-| 3 | `generate_mesh_grid` | Coordinate range [0,2]×[0,2], monotonicity |
-| 4 | `init_simulation_resets_state` | Global arrays zeroed, step counter reset |
-| 5 | `boundary_conditions_after_run` | Lid u=1, no-slip walls after 10 steps |
-| 6 | `step_counter` | Counter increments across multiple run_n_steps calls |
-| 7 | `out_of_range_returns_zero` | get_*_at returns 0 for out-of-bounds indices |
-| 8 | `constant_accessors` | nx=41, ny=41, Re=20, rho=1, nu=0.1, dt=0.001 |
-| 9 | `velocity_magnitude_consistency` | get_velocity_magnitude_at = sqrt(u²+v²) |
-| 10 | `max_velocity_magnitude_bounds` | max_mag >= 0, max_mag >= max_u |
-| 11 | `pressure_bounded` | Pressure finite within ±1000 after 50 steps |
-| 12 | `center_getters_consistent` | get_u/v/p_center = get_*_at(ny/2, nx/2) |
-| 13 | `divergence_norm_nonnegative` | Mean \|div u\| >= 0 |
-| 14 | `build_up_b_nonzero` | Pressure source term non-trivial with lid velocity |
-| 15 | `full_simulation_produces_vortex` | After 500 steps: negative u at centre, max_u >= 1 |
-| 16 | `pressure_boundary_dp_zero` | dp/dy=0 at y=0, p=0 at y=2 |
-
-#### SIMPLE solver (T17–T26)
-
-| # | Test name | Validates |
-|---|---|---|
-| 17 | `simple_init_resets_state` | All SIMPLE fields zeroed, counter reset |
-| 18 | `simple_step_counter` | Counter increments correctly across batches |
-| 19 | `simple_boundary_conditions` | Lid u=1, no-slip walls, v=0 at top after 20 iters |
-| 20 | `simple_out_of_range_returns_zero` | get_*_simple_at returns 0 for out-of-bounds |
-| 21 | `simple_residual_nonnegative` | get_simple_residual() >= 0, divergence_norm >= 0 |
-| 22 | `simple_produces_flow` | Non-zero interior u, v after 50 iterations |
-| 23 | `simple_max_u_bounds` | 0 <= max_u_simple <= 2 (under-relaxation bounds field) |
-| 24 | `simple_pressure_boundary` | p=0 at top; p[0,:]=p[1,:] (Neumann at bottom) |
-| 25 | `simple_vs_chorin_qualitative` | Both solvers show negative u at centre after 200 iters |
-| 26 | `simple_independent_of_chorin` | SIMPLE iterations do not modify Chorin global state |
-
-#### Chorin-PCG solver (T27–T34)
-
-| # | Test name | Validates |
-|---|---|---|
-| 27 | `pcg_init_resets_state` | PCG fields zeroed, step counter reset |
-| 28 | `pcg_step_counter` | Counter increments with run_chorin_pcg_n_steps |
-| 29 | `pcg_boundary_conditions` | Lid u=1, no-slip walls (side walls only, not lid row) |
-| 30 | `pcg_out_of_range_returns_zero` | get_*_pcg_at returns 0 for out-of-bounds |
-| 31 | `pcg_divergence_nonnegative` | get_pcg_divergence_norm() >= 0 |
-| 32 | `pcg_divergence_near_zero` | After 50 steps, divergence norm < 1×10⁻⁴ |
-| 33 | `pcg_produces_flow` | Non-zero interior velocity after 10 steps |
-| 34 | `pcg_vortex_formation` | After 200 steps: negative u at centre (backflow vortex) |
-
-#### MAC staggered solver (T35–T42)
-
-| # | Test name | Validates |
-|---|---|---|
-| 35 | `mac_grid_size` | get_mac_nc() = mac_nc = nx-1 = 40 |
-| 36 | `mac_pressure_bc` | Dirichlet p=0 at top row (i = mac_nc-1) |
-| 37 | `mac_step_counter` | Counter increments with run_mac_n_steps |
-| 38 | `mac_out_of_range_returns_zero` | get_*_mac_at returns 0 for out-of-bounds |
-| 39 | `mac_boundary_u` | No-slip: u=0 at left/right walls; lid: u = U_lid at top ghost |
-| 40 | `mac_boundary_v` | No-slip: v=0 at bottom wall and left/right walls |
-| 41 | `mac_divergence_near_zero` | After 50 steps, divergence norm (interior cells) < 1×10⁻⁴ |
-| 42 | `mac_vortex_formation` | After 200 steps: negative u at centre; divergence < 1×10⁻⁴ |
-
-#### Preconditioner tests (T43–T58)
-
-| Range | Group | Validates |
-|---|---|---|
-| T43–T48 | DILU preconditioner | Modified diagonal, BC preservation, < 1% error vs Jacobi PCG |
-| T49–T54 | DIC preconditioner | IC(0) Cholesky, BC preservation, < 1% error vs Jacobi PCG |
-| T55–T58 | GAMG preconditioner | 2-level V-cycle, BC preservation, < 1% error vs Jacobi PCG |
-
-#### Extended suite (T59–T152) — `main_ext_wbtest.mbt` + `main3d_wbtest.mbt`
-
-Core tests (T59–T83) plus advanced features (T84–T152):
-|---|---|---|
-| T59–T60 | Unit — array utilities | Deep-copy isolation, row independence |
-| T61–T63 | Unit — Laplacian operator | x²/y² polynomial exactness, harmonic zero |
-| T64–T65 | Unit — boundary conditions | Idempotency, coarse-grid apply |
-| T66–T67 | Unit — RHS source term | Divergence-free oracle, formula verification |
-| T68–T70 | Unit — GAMG sub-components | Prolongate constant field, restrict normalisation /4, smoother descent |
-| T71–T74 | Integration — PCG residual | All 4 preconditioners satisfy ‖r‖/‖b‖ < 10·tol after solve |
-| T75 | Integration — cross-preconditioner | Agreement < 1% on non-uniform polynomial RHS |
-| T76–T79 | System — physics | SND sign convention, determinism, additive steps, SIMPLE mass conservation |
-| T80–T83 | Regression — numerical | Modified-diag range, MAC divergence @200 steps, coarse Laplacian, vortex sign |
+The per-test listing of the original suite is available in
+[docs/test_report.md](docs/test_report.md); the paper's quantitative
+benchmarks are in [data/paper/](data/paper/).
 
 ### Physical validation
 
@@ -510,6 +425,54 @@ Core tests (T59–T83) plus advanced features (T84–T152):
 
 Apache-2.0 — see [LICENSE](LICENSE).
 
-Developed by Fenfen Yu (余芬芬) in collaboration with
-Beihang University (北京航空航天大学) and
-Ezhou Hi-Modeling Technology Co., Ltd. (鄂州海慕科技有限公司).
+## How to cite
+
+If you use FlowLabLite in your work, please cite the thesis that documents
+this software:
+
+> 余芬芬. 基于MoonBit的CFD演示原型AI原生构建方法[D]. 北京: 北京航空航天大学, 2026.
+
+```bibtex
+@misc{yu2026flowlablite,
+  author       = {Yu, Fenfen},
+  title        = {An AI-native construction method for a MoonBit-based CFD
+                  demonstration prototype},
+  howpublished = {Bachelor's thesis, School of Continuing Education,
+                  Beihang University, Beijing},
+  year         = {2026},
+  note         = {In Chinese}
+}
+```
+
+Developed by Fenfen Yu (余芬芬), School of Continuing Education, Beihang
+University (北京航空航天大学), in collaboration with Ezhou Hi-Modeling
+Technology Co., Ltd. (鄂州海慕科技有限公司).
+
+---
+
+## Paper artifacts and release structure
+
+This repository is the submission artifact for the manuscript
+"Theory-Code-Test Co-Design for AI-Assisted Scientific Software"
+(IEEE Computing in Science & Engineering draft). Three tagged states:
+
+| Tag | Contents | Non-test lines | Tests | Exports |
+|---|---|---|---|---|
+| `2d-baseline` | Four-solver 2D artifact (Sections 3, 4.1-4.2) | 5,843 | 156 | 121 |
+| `2d-projection-tvd-v1` | + Projection-TVD extension (Section 6) | 6,920 | 175 | 121 |
+| `main` (this tree) | + validation harness & paper data (Sections 4.3-4.6) | 6,982 | 176 | 121 |
+
+- `data/paper/` — curated paper data package. Its README maps every
+  table and figure in Sections 4.3-4.6 to the exact data file, and
+  `verify_paper_numbers.py` re-checks every published number against
+  the raw data (74/74 checks; see `verification_report.txt`).
+- `data/ghia_re100_u.csv`, `data/ghia_re100_v.csv` — the 17-point
+  Ghia (1982) Re = 100 comparison with reference values and errors
+  (Table 3, Re = 100 row).
+- `TEST_RESULTS.log` — full recorded output of
+  `moon test cmd/main --target wasm` on this tree
+  (176 passed / 0 failed).
+- MoonBit toolchain: the baseline artifact was built with moon
+  0.1.20260309; the validation-era runs with moon 0.1.20260618.
+  Browser build and launch steps: `docs/launch.md`.
+- Zenodo snapshot DOI: to be added upon archival.

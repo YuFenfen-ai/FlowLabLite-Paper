@@ -1,0 +1,11 @@
+De Vahl Davis (1983), Int. J. Numer. Meth. Fluids 3:249-264, "Natural convection of air in a square
+cavity: a bench mark numerical solution". Air, Pr = 0.71, unit-aspect-ratio cavity; velocities
+nondimensionalized by alpha/L. Benchmark values as reproduced in the original paper's comparison
+tables and in multiple independent reproductions (verified 2026-09-27).
+
+Ra = 1e3: Nu_avg = 1.118; u_max = 3.649 at y = 0.813; v_max = 3.697 at x ~ 0.180
+Ra = 1e4: Nu_avg = 2.238; u_max = 16.178 at y = 0.823; v_max = 19.62 at x ~ 0.119
+Ra = 1e5: Nu_avg = 4.519; u_max = 34.81 at y = 0.855; v_max = 68.22 at x ~ 0.066
+
+Note: the Ra = 1e5 u_max value 34.81 is de Vahl Davis's own published value; later high-accuracy
+benchmarks give ~34.74. Locations are quoted from the comparison tables of the original paper.

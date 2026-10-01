@@ -1,0 +1,11 @@
+Marchi, Suero & Araki (2009), J. Braz. Soc. Mech. Sci. & Eng. 31(3):186-198,
+doi:10.1590/S1678-58782009000300004. 1024 x 1024 grid with multiple Richardson extrapolations.
+"Present" rows for the classical problem, Re = 100. Transcribed 2026-09-27 from the open-access PDF:
+  http://ftp.demec.ufpr.br/disciplinas/TM777/Bibliografia/2009_Marchi_Suero_Araki_JBSMSE.pdf
+
+Table 8: psi_min = -0.1035212 at (x, y) = (0.61621, 0.73730)   (estimated coordinate errors <= 9.8e-4)
+Table 11: u_min = -0.2140417 at y = 0.45850
+Table 12: v_min = -0.253804  at x = 0.81006
+
+Cross-check: the paper's Re = 1000 psi_min (0.118936708) agrees with Botella & Peyret's spectral
+value to six decimal places (paper Table 8, Ref. 14 = 0.1189366).
