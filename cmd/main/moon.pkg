@@ -1,6 +1,6 @@
-// import {
-//   "YuFenfen-ai/FlowLabLite" @lib,
-// }
+import {
+  "moonbitlang/core/string",
+}
 
 options(
   "is-main": true,

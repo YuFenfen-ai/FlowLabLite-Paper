@@ -229,6 +229,47 @@ fn format_centerline_csv(
   buf.to_string()
 }
 
+/// Self-describing centerline output for the explicit fifth solver. Keeping a
+/// separate formatter preserves every historical solver header byte-for-byte.
+fn format_projection_tvd_centerline_csv(
+  s : SolverExport,
+  re : Double,
+  config : ProjectionTvdConfig,
+  diagnostics : ProjectionTvdDiagnostics,
+) -> String {
+  let scheme_name = if config.scheme == projection_scheme_upwind {
+    "upwind"
+  } else {
+    "tvd-vanleer"
+  }
+  let buf = StringBuilder::new()
+  buf.write_string(
+    "# FlowLabLite centerline velocity | solver=projection-tvd | " +
+    "scheme=\{scheme_name} | Re=\{re} | step=\{s.steps} | " +
+    "grid=\{s.nc}x\{s.nc} | h=\{s.h} | dt=\{config.dt} | " +
+    "pressure_tol=\{config.pressure_tol} | " +
+    "pressure_max_iter=\{config.pressure_max_iter} | " +
+    "pressure_omega=\{config.pressure_omega} | " +
+    "pressure_iters=\{diagnostics.pressure_iterations} | " +
+    "pressure_residual=\{diagnostics.pressure_residual} | " +
+    "pressure_converged=\{diagnostics.pressure_converged} | " +
+    "div_norm=\{diagnostics.divergence_norm} | " +
+    "cfl_max=\{diagnostics.cfl_max} | finite=\{diagnostics.finite}\n",
+  )
+  buf.write_string("component,index,coord,value\n")
+  let jmid = s.nc / 2
+  for row = 0; row < s.nc; row = row + 1 {
+    let y = s.y0 + row.to_double() * s.h
+    buf.write_string("u_vcl,\{row},\{y},\{s.u[row][jmid]}\n")
+  }
+  let imid = s.nc / 2
+  for col = 0; col < s.nc; col = col + 1 {
+    let x = s.x0 + col.to_double() * s.h
+    buf.write_string("v_hcl,\{col},\{x},\{s.v[imid][col]}\n")
+  }
+  buf.to_string()
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Monitor history CSV  (MonitorRecord — unified residual + physics monitor)
 // ─────────────────────────────────────────────────────────────────────────────

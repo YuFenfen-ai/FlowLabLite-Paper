@@ -34,11 +34,30 @@ fn parse_pos_int(s : String, def : Int) -> Int {
   if ok[0] && s.length() > 0 { n[0] } else { def }
 }
 
+/// Parse a strictly positive finite decimal, including scientific notation.
+/// Returns `def` for invalid, zero, negative, NaN, or infinite input.
+fn parse_positive_double(s : String, def : Double) -> Double {
+  try {
+    let value = @string.parse_double(s)
+    if value > 0.0 && value == value && value.abs() < 1.0e300 {
+      value
+    } else {
+      def
+    }
+  } catch {
+    _ => def
+  }
+}
+
 /// Return true when a CLI solver filter requests the named solver.
 /// The same predicate is used for execution and export so --solver cannot
 /// silently run unrelated solvers in the background.
 fn cli_solver_selected(filter : String, solver_name : String) -> Bool {
-  filter == "all" || filter == solver_name
+  if solver_name == "projection-tvd" {
+    filter == solver_name
+  } else {
+    filter == "all" || filter == solver_name
+  }
 }
 
 /// Parse comma-separated cumulative checkpoint steps.
@@ -148,7 +167,8 @@ fn collect_mac_export() -> SolverExport {
 
 /// Collect post-run global state into SolverExport structs.
 ///
-/// solver_filter: "all" | "chorin" | "simple" | "pcg" | "mac"
+/// solver_filter: "all" | "chorin" | "simple" | "pcg" | "mac" |
+///                "projection-tvd"
 /// Only solvers whose run_* flag is true AND whose name matches the filter
 /// are included.
 fn collect_solver_exports(solver_filter : String) -> Array[SolverExport] {
@@ -198,6 +218,9 @@ fn collect_solver_exports(solver_filter : String) -> Array[SolverExport] {
   }
   if (want_all || solver_filter == "mac") && run_mac {
     result.push(collect_mac_export())
+  }
+  if solver_filter == "projection-tvd" {
+    result.push(collect_projection_tvd_export())
   }
   result
 }
@@ -249,7 +272,7 @@ fn dispatch_format_cli(args : Array[String]) -> Unit {
     let exports = collect_solver_exports(single_solver)
     if exports.is_empty() {
       println("[io] Solver '\{single_solver}' is not available (check --solver or run_* flags).")
-      println("[io] Available: chorin | simple | pcg | mac")
+      println("[io] Available: chorin | simple | pcg | mac | projection-tvd")
       return
     }
     if fmt == "vtk" {
@@ -273,6 +296,15 @@ fn dispatch_format_cli(args : Array[String]) -> Unit {
     println(format_tecplot(solvers))
   } else if fmt == "centerline" {
     let s = solvers[0]
+    if s.name == "projection-tvd" {
+      println(format_projection_tvd_centerline_csv(
+        s,
+        g_projection_re[0],
+        g_projection_config[0],
+        get_projection_tvd_diagnostics(),
+      ))
+      return
+    }
     let re_val = 2.0 / g_nu_runtime[0]
     let div_norm = if s.name == "chorin" { get_divergence_norm() }
                    else if s.name == "pcg" { get_pcg_divergence_norm() }

@@ -2612,6 +2612,7 @@ fn main {
   let _cli_args = @env.args()
   if cli_wants_format(_cli_args) {
     g_quiet_mode[0] = true
+    let solver_filter = cli_get_string(_cli_args, "--solver", "all")
     // Parse --re: override kinematic viscosity (nu = 2.0 / Re)
     let re_str  = cli_get_string(_cli_args, "--re", "0")
     let re_int  = parse_pos_int(re_str, 0)
@@ -2619,29 +2620,99 @@ fn main {
     // Parse --steps: override time step count for all solvers
     let grid_str = cli_get_string(_cli_args, "--grid", "0")
     let grid_val = parse_pos_int(grid_str, 0)
-    if grid_val > 0 { set_grid_size(grid_val, grid_val) }
+    if grid_val > 0 && solver_filter != "projection-tvd" {
+      set_grid_size(grid_val, grid_val)
+    }
     let steps_str = cli_get_string(_cli_args, "--steps", "0")
     let steps_val = parse_pos_int(steps_str, 0)
     if steps_val > 0 { g_steps_override[0] = steps_val }
-    let solver_filter = cli_get_string(_cli_args, "--solver", "all")
+    let projection_scheme_str = cli_get_string(
+      _cli_args, "--scheme", "tvd-vanleer",
+    )
+    let projection_scheme = if projection_scheme_str == "upwind" {
+      projection_scheme_upwind
+    } else if projection_scheme_str == "tvd-vanleer" {
+      projection_scheme_tvd_van_leer
+    } else {
+      0
+    }
+    let projection_dt = parse_positive_double(
+      cli_get_string(_cli_args, "--dt", "0.001"), -1.0,
+    )
+    let projection_pressure_tol = parse_positive_double(
+      cli_get_string(_cli_args, "--pressure-tol", "1e-6"), -1.0,
+    )
+    let projection_pressure_max_iter = parse_pos_int(
+      cli_get_string(_cli_args, "--pressure-max-iter", "1000"), 0,
+    )
+    let projection_pressure_omega = parse_positive_double(
+      cli_get_string(_cli_args, "--pressure-omega", "1.7"), -1.0,
+    )
+    let projection_config : ProjectionTvdConfig = {
+      scheme: projection_scheme,
+      dt: projection_dt,
+      pressure_tol: projection_pressure_tol,
+      pressure_max_iter: projection_pressure_max_iter,
+      pressure_omega: projection_pressure_omega,
+    }
+    if solver_filter == "projection-tvd" {
+      let fmt = cli_get_string(_cli_args, "--format", "")
+      if fmt != "centerline" {
+        println("[io] projection-tvd currently requires --format centerline.")
+        return
+      }
+      if re_int <= 0 || grid_val < 3 || projection_scheme == 0 ||
+        projection_dt <= 0.0 ||
+        !projection_pressure_settings_valid(
+          projection_pressure_tol,
+          projection_pressure_max_iter,
+          projection_pressure_omega,
+        ) {
+        println("[io] Invalid projection-tvd settings: require Re>0, grid>=3, " +
+          "scheme=upwind|tvd-vanleer, dt>0, pressure_tol>0, " +
+          "pressure_max_iter>0, and 0<pressure_omega<2.")
+        return
+      }
+    }
     let checkpoints_str = cli_get_string(_cli_args, "--checkpoints", "")
     if checkpoints_str.length() > 0 {
       let fmt = cli_get_string(_cli_args, "--format", "")
       let checkpoints = parse_checkpoint_steps(checkpoints_str)
-      if fmt != "centerline" || solver_filter != "chorin" {
-        println("[io] --checkpoints requires --format centerline --solver chorin.")
+      if fmt != "centerline" ||
+        (solver_filter != "chorin" && solver_filter != "projection-tvd") {
+        println("[io] --checkpoints requires --format centerline and " +
+          "--solver chorin|projection-tvd.")
         return
       }
       if steps_val > 0 || checkpoints.is_empty() {
         println("[io] --checkpoints must be strictly increasing positive steps and cannot be combined with --steps.")
         return
       }
-      init_simulation()
-      checkpoints.each(fn(target_step : Int) {
-        run_n_steps(target_step - get_step_count())
-        let s = collect_solver_exports("chorin")[0]
-        println(format_centerline_csv(s, 2.0 / g_nu_runtime[0], get_divergence_norm()))
-      })
+      if solver_filter == "projection-tvd" {
+        init_projection_tvd(grid_val, projection_config, re_int.to_double())
+        for checkpoint_index = 0; checkpoint_index < checkpoints.length(); checkpoint_index = checkpoint_index + 1 {
+          let target_step = checkpoints[checkpoint_index]
+          run_projection_tvd_steps(target_step - g_projection_steps[0])
+          println(format_projection_tvd_centerline_csv(
+            collect_projection_tvd_export(),
+            re_int.to_double(),
+            projection_config,
+            get_projection_tvd_diagnostics(),
+          ))
+          let diagnostics = get_projection_tvd_diagnostics()
+          if !diagnostics.finite || !diagnostics.pressure_converged {
+            return
+          }
+        }
+      } else {
+        init_simulation()
+        for checkpoint_index = 0; checkpoint_index < checkpoints.length(); checkpoint_index = checkpoint_index + 1 {
+          let target_step = checkpoints[checkpoint_index]
+          run_n_steps(target_step - get_step_count())
+          let s = collect_solver_exports("chorin")[0]
+          println(format_centerline_csv(s, 2.0 / g_nu_runtime[0], get_divergence_norm()))
+        }
+      }
       return
     }
     // Effective step counts (override or compile-time default)
@@ -2649,6 +2720,12 @@ fn main {
     let eff_simple = if g_steps_override[0] > 0 { g_steps_override[0] } else { local_simple_n }
     let eff_pcg    = if g_steps_override[0] > 0 { g_steps_override[0] } else { local_pcg_nt }
     let eff_mac    = if g_steps_override[0] > 0 { g_steps_override[0] } else { local_mac_nt }
+    if solver_filter == "projection-tvd" {
+      init_projection_tvd(grid_val, projection_config, re_int.to_double())
+      run_projection_tvd_steps(eff_nt)
+      dispatch_format_cli(_cli_args)
+      return
+    }
     if run_chorin && cli_solver_selected(solver_filter, "chorin") { init_simulation(); run_n_steps(eff_nt) }
     if run_simple && cli_solver_selected(solver_filter, "simple") { init_simple(); run_simple_n_iter(eff_simple) }
     if run_pcg && cli_solver_selected(solver_filter, "pcg") { init_chorin_pcg(); run_chorin_pcg_n_steps(eff_pcg) }
