@@ -460,7 +460,7 @@ This repository is the submission artifact for the manuscript
 |---|---|---|---|---|
 | `2d-baseline` | Four-solver 2D artifact (Sections 3, 4.1-4.2) | 5,843 | 156 | 121 |
 | `2d-projection-tvd-v1` | + Projection-TVD extension (Section 6) | 6,920 | 175 | 121 |
-| `main` (this tree) | + validation harness & paper data (Sections 4.3-4.6) | 6,982 | 176 | 121 |
+| `main` (this tree, tag: `v1.0.0`) | + validation harness & paper data (Sections 4.3-4.6) | 6,982 | 176 | 121 |
 
 - `data/paper/` — curated paper data package. Its README maps every
   table and figure in Sections 4.3-4.6 to the exact data file, and
