@@ -1,0 +1,7 @@
+// import {
+//   "YuFenfen-ai/FlowLabLite" @lib,
+// }
+
+options(
+  "is-main": true,
+)

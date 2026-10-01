@@ -1,0 +1,34 @@
+{
+  "re": 1000,
+  "grid": 129,
+  "checkpoints": [
+    500,
+    1000
+  ],
+  "command": [
+    "C:\\Users\\admin\\.moon\\bin\\moon.exe",
+    "run",
+    "cmd/main",
+    "--release",
+    "--target",
+    "wasm",
+    "--",
+    "--format",
+    "centerline",
+    "--solver",
+    "chorin",
+    "--grid",
+    "129",
+    "--checkpoints",
+    "500,1000",
+    "--re",
+    "1000"
+  ],
+  "elapsed_seconds": 29.123075100127608,
+  "resumed": false,
+  "python": "3.12.13 (main, Mar  3 2026, 15:01:35) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "summary_json": "D:\\yufenfen\\MoonBit\\project\\FlowLabLite\\.worktrees\\codex-re100-validation\\validation\\results\\ghia\\re1000\\g129\\time_convergence.json",
+  "time_converged": false,
+  "selected_time_step": null
+}

@@ -1,0 +1,157 @@
+FlowLabLite thesis final submission package (2D)
+================================================
+Authoritative Git commit: 4d0162b76e85b53413336789a87a165fc25becaf
+Base validation snapshot: aa8c89c139f001b0650de5cc7eed84afe4b9a3c4
+Required statistics tool: scc 3.7.0
+Package creation date: 2026-08-17
+
+Source boundary:
+- Exported tracked files from commit 4d0162b.
+- Excluded complete path: cmd/main3d/
+- Excluded file: build_wasm_3d.sh
+- Replaced historical symlink-mode README.md with a 2D-only submission README.
+- No generated _build directory is included.
+
+Verified thesis statistic:
+- cmd/main/*.mbt excluding *wbtest.mbt
+- 14 files, 5843 physical Lines, 3955 Code, 1357 Comments, 531 Blanks
+
+Verified 2D tests:
+- Command: moon test --target wasm --no-render
+- Result: Total tests: 156, passed: 156, failed: 0
+
+The following file list includes source, validation evidence, and package audit files present before SHA256SUMS.txt was generated.
+
+FILES
+-----
+.gitignore
+CLAUDE.md
+INSTALL.md
+LICENSE
+README.mbt.md
+README.md
+SCC_FULL_PACKAGE.csv
+SCC_HTML.csv
+SCC_NONTEST.csv
+SCC_SHELL.csv
+SCC_TEST.csv
+TEST_EXIT_CODE.txt
+TEST_RESULTS.log
+bench/ChorinGSBench.java
+bench/chorin_gs_bench.c
+bench/chorin_gs_bench.py
+bench/run_bench.sh
+build_wasm.sh
+cmd/main/bc_library.mbt
+cmd/main/curvilinear_grid.mbt
+cmd/main/io_cli.mbt
+cmd/main/io_formats.mbt
+cmd/main/io_netcdf_stub.mbt
+cmd/main/local_viewer.html
+cmd/main/main.html
+cmd/main/main.mbt
+cmd/main/main_bench.mbt
+cmd/main/main_ext_wbtest.mbt
+cmd/main/main_wbtest.mbt
+cmd/main/monitor.mbt
+cmd/main/moon.pkg
+cmd/main/moon.pkg.json
+cmd/main/schemes.mbt
+cmd/main/solver_boussinesq.mbt
+cmd/main/solver_fvm.mbt
+cmd/main/solver_scalar.mbt
+cmd/main/stretched_grid.mbt
+cmd/main/validation.mbt
+cmd/main/validation_cli_wbtest.mbt
+data/sample_results.json
+docs/SKILL.md
+docs/api_reference.md
+docs/arch.md
+docs/bugs.md
+docs/cfd_terminology.md
+docs/design_pcg_solver.md
+docs/dev_guide.md
+docs/flow.md
+docs/ghia_validation.md
+docs/io.md
+docs/preconditioner_plan.md
+docs/preconditioner_theory.md
+docs/solver_monitor.md
+docs/superpowers/plans/2026-08-05-re100-quantitative-validation.md
+docs/superpowers/plans/2026-08-11-thesis-quantitative-validation.md
+docs/superpowers/specs/2026-08-05-re100-quantitative-validation-design.md
+docs/superpowers/specs/2026-08-11-thesis-bugfix-consistency-design.md
+docs/superpowers/specs/2026-08-11-thesis-quantitative-validation-design.md
+docs/test_report.md
+docs/theory.md
+docs/validation_report.md
+examples/01_cli_baseline/README.md
+examples/02_ai_workflow/README.md
+features.md
+images/local_viewer.png
+lib/moon.pkg.json
+moon.mod.json
+multilang_ben.md
+run_local.sh
+scan_re.sh
+validation/__init__.py
+validation/benchmark_repro.py
+validation/ghia_report.py
+validation/ghia_study.py
+validation/performance_report.py
+validation/re100_study.py
+validation/results/ghia/re100/g129/centerline_s10000.csv
+validation/results/ghia/re100/g129/centerline_s20000.csv
+validation/results/ghia/re100/g129/centerline_s30000.csv
+validation/results/ghia/re100/g129/centerline_s40000.csv
+validation/results/ghia/re100/g129/centerline_s5000.csv
+validation/results/ghia/re100/g129/pointwise_errors.csv
+validation/results/ghia/re100/g129/run_manifest.json
+validation/results/ghia/re100/g129/time_convergence.csv
+validation/results/ghia/re100/g129/time_convergence.json
+validation/results/ghia/re1000/g129/centerline_s1000.csv
+validation/results/ghia/re1000/g129/centerline_s2000.csv
+validation/results/ghia/re1000/g129/centerline_s500.csv
+validation/results/ghia/re1000/g129/centerline_s5000.csv
+validation/results/ghia/re1000/g129/checkpoint_stream_diverged_s5000.txt
+validation/results/ghia/re1000/g129/pointwise_errors.csv
+validation/results/ghia/re1000/g129/run_manifest.json
+validation/results/ghia/re1000/g129/time_convergence.csv
+validation/results/ghia/re1000/g129/time_convergence.json
+validation/results/ghia/re400/g129/centerline_s10000.csv
+validation/results/ghia/re400/g129/centerline_s20000.csv
+validation/results/ghia/re400/g129/centerline_s30000.csv
+validation/results/ghia/re400/g129/centerline_s40000.csv
+validation/results/ghia/re400/g129/centerline_s5000.csv
+validation/results/ghia/re400/g129/pointwise_errors.csv
+validation/results/ghia/re400/g129/run_manifest.json
+validation/results/ghia/re400/g129/time_convergence.csv
+validation/results/ghia/re400/g129/time_convergence.json
+validation/results/ghia/runlogs/re100.stderr.log
+validation/results/ghia/runlogs/re100.stdout.log
+validation/results/ghia/runlogs/re1000.stderr.log
+validation/results/ghia/runlogs/re1000.stdout.log
+validation/results/ghia/runlogs/re1000_early.stderr.log
+validation/results/ghia/runlogs/re1000_early.stdout.log
+validation/results/ghia/runlogs/re400.stderr.log
+validation/results/ghia/runlogs/re400.stdout.log
+validation/results/performance/benchmark_samples.csv
+validation/results/performance/benchmark_summary.json
+validation/results/performance/prebuild_stderr.log
+validation/results/performance_run.stderr.log
+validation/results/performance_run.stdout.log
+validation/results/report/ghia_centerlines.pdf
+validation/results/report/ghia_centerlines.png
+validation/results/report/ghia_manifest.json
+validation/results/report/ghia_quantitative_table.csv
+validation/results/report/performance_manifest.json
+validation/results/report/performance_runtime.pdf
+validation/results/report/performance_runtime.png
+validation/results/report/performance_table.csv
+validation/run_ghia_study.py
+validation/test_benchmark_prebuild.py
+validation/test_benchmark_repro.py
+validation/test_ghia_report.py
+validation/test_performance_report.py
+validation/test_re100_study.py
+validation/test_run_ghia_study.py

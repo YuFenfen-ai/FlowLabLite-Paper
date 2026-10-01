@@ -1,0 +1,12 @@
+.DS_Store
+_build/
+.mooncakes/
+.moonagent/
+.worktrees/
+results*.json
+_build_results*.json
+CLAUDE.md
+decides.md
+todo.md
+*.class
+bench/chorin_gs_bench_c

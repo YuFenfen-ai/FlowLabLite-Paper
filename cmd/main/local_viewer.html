@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowLabLite – Results Viewer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --c-bg:       #0f172a;
+      --c-surface:  #1e293b;
+      --c-surface2: #334155;
+      --c-border:   rgba(255,255,255,0.12);
+      --c-text:     #e2e8f0;
+      --c-muted:    #94a3b8;
+      --c-accent:   #3b82f6;
+      --c-success:  #22c55e;
+      --c-danger:   #ef4444;
+    }
+    body.theme-light {
+      --c-bg:       #f8fafc;
+      --c-surface:  #ffffff;
+      --c-surface2: #f1f5f9;
+      --c-border:   rgba(0,0,0,0.12);
+      --c-text:     #0f172a;
+      --c-muted:    #64748b;
+    }
+    body.theme-transparent {
+      --c-bg:       transparent;
+      --c-surface:  rgba(15,23,42,0.72);
+      --c-surface2: rgba(30,41,59,0.72);
+      --c-border:   rgba(255,255,255,0.15);
+      --c-text:     #e2e8f0;
+      --c-muted:    #94a3b8;
+    }
+    body.theme-print {
+      --c-bg:       #ffffff;
+      --c-surface:  #ffffff;
+      --c-surface2: #f5f5f5;
+      --c-border:   rgba(0,0,0,0.15);
+      --c-text:     #000000;
+      --c-muted:    #555555;
+    }
+    .nav-link {
+      color: var(--c-muted);
+      text-decoration: none;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid var(--c-border);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-link:hover { color: var(--c-text); border-color: var(--c-accent); }
+    .field-unit { font-size: 10px; color: var(--c-muted); font-weight: 400; margin-left: 3px; }
+
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: var(--c-bg);
+      color: var(--c-text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 32px; height: 32px;
+      background: var(--c-accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .header-title {
+      font-size: 15px; font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-sub { font-size: 11px; color: var(--c-muted); }
+    .status-pill {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--c-muted);
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      border-radius: 99px;
+      padding: 4px 12px;
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--c-success);
+      box-shadow: 0 0 5px var(--c-success);
+    }
+    .dot.idle { background: var(--c-muted); box-shadow: none; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      padding: 7px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .tsep { width: 1px; height: 22px; background: var(--c-border); }
+    .tlabel { font-size: 11px; color: var(--c-muted); white-space: nowrap; }
+
+    /* buttons */
+    .btn {
+      padding: 5px 12px;
+      border: 1px solid var(--c-border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      background: var(--c-surface2);
+      color: var(--c-text);
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      outline: none;
+    }
+    .btn:hover { background: #3b4a63; }
+    .btn.primary { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+    .btn.primary:hover { background: #2563eb; }
+    .btn.active { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+    .btn-group { display: flex; }
+    .btn-group .btn { border-radius: 0; border-right-width: 0; }
+    .btn-group .btn:first-child { border-radius: 6px 0 0 6px; }
+    .btn-group .btn:last-child  { border-radius: 0 6px 6px 0; border-right-width: 1px; }
+
+    /* ── Main layout ── */
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ── Left: visualization area ── */
+    .viz-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    /* drop-zone (only shown before data loaded) */
+    .drop-zone {
+      border: 2px dashed var(--c-border);
+      border-radius: 10px;
+      padding: 22px;
+      text-align: center;
+      color: var(--c-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--c-accent);
+      background: rgba(59,130,246,0.07);
+      color: var(--c-accent);
+    }
+    .drop-zone input[type="file"] { display: none; }
+    .drop-zone code {
+      background: var(--c-surface2);
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 12px; color: var(--c-text);
+    }
+
+    /* 2-column canvas grid */
+    .canvas-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .canvas-panel {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .canvas-panel-title {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--c-muted);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .canvas-panel-title span { font-size: 11px; font-weight: 400; color: #475569; }
+
+    /* canvas fills its panel width, square via aspect-ratio + visible bg padding */
+    .canvas-wrapper {
+      width: 100%;
+      padding: 10px;         /* bg colour shows as frame around the canvas */
+      border-radius: 8px;
+      background: #1a1a2e;   /* default dark */
+    }
+    .canvas-wrapper canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+    }
+    /* Background variants – colour visible in the 5px padding frame */
+    .canvas-wrapper.bg-dark   { background: #1a1a2e; }
+    .canvas-wrapper.bg-black  { background: #000000; }
+    .canvas-wrapper.bg-white  { background: #e8e8e8; }
+    .canvas-wrapper.bg-gray   { background: #6b7280; }
+    .canvas-wrapper.bg-navy   { background: #0a1128; }
+
+    /* ── Horizontal colorbar ── */
+    .colorbar-row { display: flex; flex-direction: column; gap: 4px; }
+
+    .colorbar-strip {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .colorbar-bar {
+      flex: 1; height: 13px;
+      border-radius: 3px;
+      border: 1px solid var(--c-border);
+    }
+    .cb-label {
+      font-size: 11px; font-family: monospace;
+      color: var(--c-muted); min-width: 62px;
+    }
+    .cb-label.right { text-align: right; }
+
+    /* min/max override */
+    .range-row {
+      display: flex; align-items: center; gap: 8px; font-size: 11px;
+    }
+    .range-row label { display: flex; align-items: center; gap: 4px; color: var(--c-muted); cursor: pointer; }
+    .range-row input[type="number"] {
+      width: 72px; padding: 2px 5px;
+      background: var(--c-surface2); border: 1px solid var(--c-border);
+      border-radius: 4px; color: var(--c-text);
+      font-size: 11px; font-family: monospace;
+      outline: none;
+    }
+    .range-row input[type="number"]:focus { border-color: var(--c-accent); }
+    .range-row input[type="number"]:disabled { opacity: 0.38; cursor: not-allowed; }
+    .range-row .btn { padding: 2px 8px; font-size: 11px; }
+
+    /* ── Right: control panel ── */
+    .control-panel {
+      width: 292px;
+      flex-shrink: 0;
+      background: var(--c-surface);
+      border-left: 1px solid var(--c-border);
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* collapsible sections */
+    .cp-section {
+      border: 1px solid var(--c-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .cp-head {
+      padding: 8px 12px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--c-muted);
+      background: var(--c-surface2);
+      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      user-select: none;
+    }
+    .cp-head:hover { color: var(--c-text); }
+    .cp-arrow { transition: transform 0.2s; }
+    .cp-section.collapsed .cp-arrow { transform: rotate(-90deg); }
+    .cp-body { padding: 10px 12px; }
+    .cp-section.collapsed .cp-body { display: none; }
+
+    .prow {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 3px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .prow:last-child { border-bottom: none; }
+    .pk { color: var(--c-muted); }
+    .pv { font-family: monospace; color: var(--c-text); text-align: right; }
+    .pv.hi { color: #06b6d4; }
+    .pv.warn { color: var(--c-success); }
+
+    /* status bar */
+    .statusbar {
+      background: var(--c-surface);
+      border-top: 1px solid var(--c-border);
+      padding: 5px 16px;
+      display: flex; align-items: center; gap: 24px;
+      flex-shrink: 0; flex-wrap: wrap;
+    }
+    .sitem {
+      display: flex; gap: 6px; align-items: center;
+      font-size: 11px; font-family: monospace;
+    }
+    .sk { color: var(--c-muted); text-transform: uppercase; }
+    .sv { color: var(--c-accent); font-weight: 600; }
+    .smsg { flex: 1; font-size: 11px; color: var(--c-muted); }
+    .smsg.ok  { color: var(--c-success); }
+    .smsg.err { color: var(--c-danger); }
+    .smsg.loading { color: #f59e0b; }
+
+    /* fullscreen overlay */
+    .viz-area:fullscreen,
+    .viz-area:-webkit-full-screen {
+      background: var(--c-bg);
+      padding: 16px;
+      overflow: auto;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--c-surface2); border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .canvas-grid { grid-template-columns: 1fr; }
+      .control-panel { width: 100%; border-left: none; border-top: 1px solid var(--c-border); }
+      .main { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-brand">
+    <div class="brand-icon">🌊</div>
+    <div>
+      <div class="header-title">FlowLabLite — Results Viewer</div>
+      <div class="header-sub">2D Lid-Driven Cavity Flow · MoonBit / WebAssembly</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="main.html" class="nav-link" title="Open live solver">🔴 Live</a>
+    <button class="btn" style="padding:3px 8px;font-size:12px" id="themeBtn" onclick="cycleTheme()" title="Cycle colour theme">🎨</button>
+    <!-- Solver quick-switch (visible only for multi-solver JSON) -->
+    <div id="headerSolverSwitch" style="display:none;gap:4px;align-items:center;display:none">
+      <button class="btn active" id="hBtnChorin" onclick="setActiveSolver('chorin')"
+        style="padding:4px 10px;font-size:12px" title="Switch to Chorin solver view">Chorin</button>
+      <button class="btn" id="hBtnSimple" onclick="setActiveSolver('simple')"
+        style="padding:4px 10px;font-size:12px" title="Switch to SIMPLE solver view">SIMPLE</button>
+      <button class="btn" id="hBtnPcg" onclick="setActiveSolver('pcg')"
+        style="padding:4px 10px;font-size:12px" title="Switch to Chorin-PCG solver view">PCG</button>
+      <button class="btn" id="hBtnMac" onclick="setActiveSolver('mac')"
+        style="padding:4px 10px;font-size:12px" title="Switch to MAC staggered solver view">MAC</button>
+    </div>
+    <div class="status-pill" id="headerPill">
+      <div class="dot idle" id="headerDot"></div>
+      <span id="headerMsg">No data</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ TOOLBAR ══════════════════════════════════════════════════════════════ -->
+<div class="toolbar">
+  <!-- Load -->
+  <button class="btn primary" id="btnLoad" title="Click or drop a JSON file">📂 Load JSON</button>
+  <button class="btn" id="btnPaste" title="Read from clipboard">📋 Paste</button>
+  <button class="btn" id="btnSample">Demo</button>
+  <button class="btn" id="btnClear">✕ Clear</button>
+  <input type="file" id="fileInput" accept=".json,.txt" style="display:none">
+
+  <div class="tsep"></div>
+
+  <!-- Solver selector (shown when multi-solver JSON loaded) -->
+  <div id="solverBar" style="display:none;align-items:center;gap:6px">
+    <span class="tlabel">Solver:</span>
+    <div class="btn-group">
+      <button class="btn active" id="btnChorin" onclick="setActiveSolver('chorin')">Chorin</button>
+      <button class="btn" id="btnSimple" onclick="setActiveSolver('simple')">SIMPLE</button>
+      <button class="btn" id="btnPcg"    onclick="setActiveSolver('pcg')">PCG</button>
+      <button class="btn" id="btnMac"    onclick="setActiveSolver('mac')">MAC</button>
+    </div>
+  </div>
+
+  <div class="tsep" id="solverSep" style="display:none"></div>
+
+  <!-- Background color (dropdown) -->
+  <span class="tlabel">BG:</span>
+  <select id="bgSelect" onchange="setBg(this.value)"
+    style="padding:4px 6px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none">
+    <option value="dark">Dark</option>
+    <option value="black">Black</option>
+    <option value="navy">Navy</option>
+    <option value="gray">Gray</option>
+    <option value="white">White</option>
+  </select>
+
+  <div class="tsep"></div>
+
+  <!-- Isoline controls -->
+  <span class="tlabel">Isolines:</span>
+  <label class="tlabel" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+    <input type="checkbox" id="velContourChk" onchange="onContourChange()"> Vel
+  </label>
+  <label class="tlabel" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+    <input type="checkbox" id="presContourChk" onchange="onContourChange()"> Pres
+  </label>
+  <span class="tlabel">n=</span>
+  <input type="number" id="contourN" value="10" min="2" max="30"
+    style="width:42px;padding:3px 5px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none"
+    oninput="onContourChange()">
+  <select id="contourColor" onchange="onContourChange()"
+    style="padding:4px 6px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none">
+    <option value="auto">Auto color</option>
+    <option value="#ffffff">White</option>
+    <option value="#000000">Black</option>
+    <option value="#ffff00">Yellow</option>
+    <option value="#00ffff">Cyan</option>
+    <option value="#ff8800">Orange</option>
+  </select>
+
+  <div class="tsep"></div>
+
+  <!-- u/v component plots toggle -->
+  <label class="tlabel" style="cursor:pointer;display:flex;align-items:center;gap:4px"
+    title="Show separate u (x) and v (y) velocity component maps below the main plots">
+    <input type="checkbox" id="showUVChk" onchange="toggleUVGrid()"> u/v fields
+  </label>
+
+  <div class="tsep"></div>
+  <button class="btn" id="btnHelp" onclick="showHelp()" title="Usage guide and developer info">? Help</button>
+  <button class="btn" id="btnFs" title="Fullscreen visualization area">⛶ Full</button>
+
+  <div class="tsep"></div>
+
+  <!-- Export group — intentionally last so it doesn't crowd Fullscreen -->
+  <span class="tlabel" style="color:#64748b">Export:</span>
+  <select id="exportField"
+    style="padding:4px 6px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none">
+    <option value="velocity">Velocity</option>
+    <option value="pressure">Pressure</option>
+    <option value="both">Both</option>
+  </select>
+  <select id="exportFmt"
+    style="padding:4px 6px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none">
+    <option value="png">PNG</option>
+    <option value="jpg">JPEG</option>
+    <option value="svg">SVG</option>
+  </select>
+  <span class="tlabel">px:</span>
+  <input type="number" id="exportPx" value="1024" min="256" max="4096" step="256"
+    style="width:56px;padding:3px 5px;background:var(--c-surface2);border:1px solid var(--c-border);
+           border-radius:5px;color:var(--c-text);font-size:12px;outline:none">
+  <button class="btn primary" id="btnExport">⬇ Img</button>
+  <button class="btn" id="btnCsv">⬇ CSV</button>
+</div>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- ── Visualization area ── -->
+  <div class="viz-area" id="vizArea">
+
+    <!-- Drop zone (shown before data is loaded) -->
+    <div class="drop-zone" id="dropZone">
+      <div style="font-size:28px;margin-bottom:8px;">📁</div>
+      <strong>Drag &amp; drop results.json here</strong>, or click to browse<br>
+      Generate with: <code>bash run_local.sh</code> →
+      produces <code>results.json</code> (Chorin + SIMPLE + PCG + MAC)
+    </div>
+
+    <!-- 2-column canvas grid (hidden until data loaded) -->
+    <div class="canvas-grid" id="canvasGrid" style="display:none">
+
+      <!-- Velocity canvas panel -->
+      <div class="canvas-panel">
+        <div class="canvas-panel-title">
+          Velocity Magnitude <span class="field-unit">[m/s]</span>
+          <span id="velActiveLbl"></span>
+        </div>
+        <div class="canvas-wrapper bg-dark" id="velWrapper">
+          <canvas id="velCanvas" width="500" height="500"></canvas>
+        </div>
+        <!-- Horizontal colorbar -->
+        <div class="colorbar-row">
+          <div class="colorbar-strip">
+            <span class="cb-label" id="velCbMin">0.0000</span>
+            <div class="colorbar-bar" id="velCbBar"
+              style="background:linear-gradient(to right,
+                #000080,#0000ff,#00ffff,#00ff00,#ffff00,#ff0000)"></div>
+            <span class="cb-label right" id="velCbMax">—</span>
+          </div>
+          <div class="range-row">
+            <label><input type="checkbox" id="velAutoChk" checked> Auto range</label>
+            <span style="color:var(--c-muted)">Min</span>
+            <input type="number" id="velManMin" step="0.001" placeholder="min" disabled>
+            <span style="color:var(--c-muted)">Max</span>
+            <input type="number" id="velManMax" step="0.001" placeholder="max" disabled>
+            <button class="btn" id="velApply" onclick="applyVelRange()" disabled>Apply</button>
+          </div>
+        </div>
+        <!-- Arrow vector legend -->
+        <div style="margin-top:6px;border:1px solid var(--c-border);border-radius:6px;padding:6px 8px;background:var(--c-surface2)">
+          <div style="font-size:10px;color:var(--c-muted);margin-bottom:4px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase">
+            Arrow length legend (length ∝ speed)
+          </div>
+          <canvas id="arrowLegendCanvas" height="44"
+            style="width:100%;display:block;border-radius:3px;background:transparent"
+            title="Each arrow on the velocity map has length proportional to the local flow speed. These reference arrows show the scale."></canvas>
+        </div>
+      </div>
+
+      <!-- Pressure canvas panel -->
+      <div class="canvas-panel">
+        <div class="canvas-panel-title">
+          Pressure Field <span class="field-unit">[Pa]</span>
+          <span id="presActiveLbl"></span>
+        </div>
+        <div class="canvas-wrapper bg-dark" id="presWrapper">
+          <canvas id="presCanvas" width="500" height="500"></canvas>
+        </div>
+        <!-- Horizontal colorbar -->
+        <div class="colorbar-row">
+          <div class="colorbar-strip">
+            <span class="cb-label" id="presCbMin">—</span>
+            <div class="colorbar-bar" id="presCbBar"
+              style="background:linear-gradient(to right,
+                #0000ff,#00ffff,#ff8000,#ff0000)"></div>
+            <span class="cb-label right" id="presCbMax">—</span>
+          </div>
+          <div class="range-row">
+            <label><input type="checkbox" id="presAutoChk" checked> Auto range</label>
+            <span style="color:var(--c-muted)">Min</span>
+            <input type="number" id="presManMin" step="0.001" placeholder="min" disabled>
+            <span style="color:var(--c-muted)">Max</span>
+            <input type="number" id="presManMax" step="0.001" placeholder="max" disabled>
+            <button class="btn" id="presApply" onclick="applyPresRange()" disabled>Apply</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /canvas-grid -->
+
+    <!-- u / v component panels (second row, toggled via "u/v fields" checkbox) -->
+    <div style="display:none;padding:4px 0 2px;font-size:11px;color:var(--c-muted)" id="uvLabel">
+      u/v component fields — diverging colormap: blue = negative · white = zero · red = positive
+    </div>
+    <div class="canvas-grid" id="uvGrid" style="display:none">
+
+      <!-- u velocity -->
+      <div class="canvas-panel">
+        <div class="canvas-panel-title">
+          u Velocity (x-component) <span class="field-unit">[m/s]</span>
+          <span id="uActiveLbl" style="font-size:10px;color:#475569"></span>
+        </div>
+        <div class="canvas-wrapper bg-dark" id="uWrapper">
+          <canvas id="uCanvas" width="500" height="500"></canvas>
+        </div>
+        <div class="colorbar-row">
+          <div class="colorbar-strip">
+            <span class="cb-label" id="uCbMin">—</span>
+            <div class="colorbar-bar"
+              style="background:linear-gradient(to right,#0055ff,#aaccff,#ffffff,#ffaaaa,#ff2200)"></div>
+            <span class="cb-label right" id="uCbMax">—</span>
+          </div>
+          <div style="font-size:10px;color:var(--c-muted);margin-top:2px">
+            Blue = negative (leftward) &nbsp;|&nbsp; Red = positive (rightward)
+          </div>
+        </div>
+      </div>
+
+      <!-- v velocity -->
+      <div class="canvas-panel">
+        <div class="canvas-panel-title">
+          v Velocity (y-component) <span class="field-unit">[m/s]</span>
+          <span id="vActiveLbl" style="font-size:10px;color:#475569"></span>
+        </div>
+        <div class="canvas-wrapper bg-dark" id="vWrapper">
+          <canvas id="vCanvas" width="500" height="500"></canvas>
+        </div>
+        <div class="colorbar-row">
+          <div class="colorbar-strip">
+            <span class="cb-label" id="vCbMin">—</span>
+            <div class="colorbar-bar"
+              style="background:linear-gradient(to right,#0055ff,#aaccff,#ffffff,#ffaaaa,#ff2200)"></div>
+            <span class="cb-label right" id="vCbMax">—</span>
+          </div>
+          <div style="font-size:10px;color:var(--c-muted);margin-top:2px">
+            Blue = negative (downward) &nbsp;|&nbsp; Red = positive (upward)
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /uvGrid -->
+
+  </div><!-- /viz-area -->
+
+  <!-- ── Right: control panel ── -->
+  <div class="control-panel">
+
+    <!-- ── Playback / Animation ── -->
+    <div class="cp-section" id="secPlay">
+      <div class="cp-head" onclick="toggleSec('secPlay')">
+        ▶ Playback Animation <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body" style="display:flex;flex-direction:column;gap:10px">
+        <!-- Play controls -->
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="btn primary" id="btnPlay"  onclick="playStart()" style="flex:1">▶ Play</button>
+          <button class="btn" id="btnPause2" onclick="playPause()" style="flex:1">⏸ Pause</button>
+          <button class="btn" id="btnReset"  onclick="playReset()" style="flex:1">⟳ Reset</button>
+        </div>
+        <!-- Single step -->
+        <button class="btn" id="btnStep" onclick="playStep()" style="width:100%">
+          ⏭ Single Step (+1 frame)
+        </button>
+        <!-- Progress slider -->
+        <div style="font-size:11px;color:var(--c-muted)">
+          Progress:
+          <span id="playPct" style="color:var(--c-accent);font-family:monospace">0%</span>
+          &nbsp;
+          <span id="playFrameInfo" style="color:var(--c-muted);font-size:10px"></span>
+        </div>
+        <input type="range" id="playSlider" min="0" max="100" value="0"
+          style="width:100%;accent-color:var(--c-accent)"
+          oninput="playSeek(this.value)">
+        <!-- Speed control -->
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--c-muted)">
+          <span>Speed:</span>
+          <input type="range" id="playSpeed" min="1" max="20" value="8"
+            style="flex:1;accent-color:var(--c-accent)">
+          <span id="playSpeedLbl" style="font-family:monospace;color:var(--c-text);min-width:40px">8 fps</span>
+        </div>
+        <!-- Frames -->
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--c-muted)">
+          <span>Total frames:</span>
+          <input type="number" id="playFrames" value="60" min="10" max="500"
+            style="width:60px;padding:2px 5px;background:var(--c-surface2);border:1px solid var(--c-border);
+                   border-radius:4px;color:var(--c-text);font-size:11px;font-family:monospace;outline:none">
+        </div>
+        <p style="font-size:10px;color:#475569;line-height:1.5">
+          Animation interpolates the field from zero → final result,
+          simulating gradual convergence from initial conditions.
+        </p>
+        <p style="font-size:10px;color:#475569;line-height:1.5">
+          To regenerate with different step/iter counts, edit
+          <code style="background:var(--c-surface2);padding:1px 3px;border-radius:2px">main.mbt</code>
+          constants and re-run <code style="background:var(--c-surface2);padding:1px 3px;border-radius:2px">bash run_local.sh</code>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Parameters -->
+    <div class="cp-section" id="secParams">
+      <div class="cp-head" onclick="toggleSec('secParams')">
+        Simulation Parameters <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body">
+        <div class="prow"><span class="pk">Grid size</span>    <span class="pv hi" id="pGrid">—</span></div>
+        <div class="prow"><span class="pk">Solver</span>       <span class="pv hi" id="pSolver">—</span></div>
+        <div class="prow"><span class="pk" id="pStepsLbl">Steps</span>        <span class="pv"    id="pSteps">—</span></div>
+        <div class="prow"><span class="pk">SIMPLE iters</span> <span class="pv"    id="pSiters">—</span></div>
+        <div class="prow"><span class="pk">Reynolds Re</span>  <span class="pv hi" id="pRe">—</span></div>
+        <div class="prow"><span class="pk">Density ρ</span>    <span class="pv"    id="pRho">—</span></div>
+        <div class="prow"><span class="pk">Viscosity ν</span>  <span class="pv"    id="pNu">—</span></div>
+        <div class="prow"><span class="pk">Time step dt</span> <span class="pv"    id="pDt">—</span></div>
+        <div class="prow"><span class="pk">Poisson iters</span><span class="pv"    id="pNit">—</span></div>
+      </div>
+    </div>
+
+    <!-- Field statistics -->
+    <div class="cp-section" id="secStats">
+      <div class="cp-head" onclick="toggleSec('secStats')">
+        Field Statistics <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body">
+        <div class="prow"><span class="pk">Active solver</span><span class="pv hi" id="sActive">—</span></div>
+        <div class="prow"><span class="pk">Max |u|</span>      <span class="pv warn" id="sMaxU">—</span></div>
+        <div class="prow"><span class="pk">Max |v|</span>      <span class="pv warn" id="sMaxV">—</span></div>
+        <div class="prow"><span class="pk">Max |V|</span>      <span class="pv warn" id="sMaxMag">—</span></div>
+        <div class="prow"><span class="pk">Max pressure</span> <span class="pv"    id="sMaxP">—</span></div>
+        <div class="prow"><span class="pk">Min pressure</span> <span class="pv"    id="sMinP">—</span></div>
+        <div class="prow"><span class="pk">|div u| avg</span> <span class="pv"    id="sDivN">—</span></div>
+        <div class="prow" id="sResRow" style="display:none">
+          <span class="pk">SIMPLE residual</span><span class="pv" id="sResid">—</span>
+        </div>
+        <div class="prow"><span class="pk">Elapsed</span>      <span class="pv"    id="sElap">—</span></div>
+      </div>
+    </div>
+
+    <!-- Centre-point data -->
+    <div class="cp-section" id="secCenter">
+      <div class="cp-head" onclick="toggleSec('secCenter')">
+        Centre Point (nx/2, ny/2) <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body">
+        <div class="prow"><span class="pk">u velocity</span>  <span class="pv" id="cU">—</span></div>
+        <div class="prow"><span class="pk">v velocity</span>  <span class="pv" id="cV">—</span></div>
+        <div class="prow"><span class="pk">Pressure p</span> <span class="pv" id="cP">—</span></div>
+        <div class="prow"><span class="pk">|V| magnitude</span><span class="pv" id="cMag">—</span></div>
+      </div>
+    </div>
+
+    <!-- Timing -->
+    <div class="cp-section collapsed" id="secTiming" style="display:none">
+      <div class="cp-head" onclick="toggleSec('secTiming')">
+        Timing <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body">
+        <div class="prow"><span class="pk">Chorin init</span> <span class="pv" id="tCI">—</span></div>
+        <div class="prow"><span class="pk">Chorin run</span>  <span class="pv" id="tCR">—</span></div>
+        <div class="prow"><span class="pk">SIMPLE init</span> <span class="pv" id="tSI">—</span></div>
+        <div class="prow"><span class="pk">SIMPLE run</span>  <span class="pv" id="tSR">—</span></div>
+        <div class="prow"><span class="pk">PCG init</span>    <span class="pv" id="tPI">—</span></div>
+        <div class="prow"><span class="pk">PCG run</span>     <span class="pv" id="tPR">—</span></div>
+        <div class="prow"><span class="pk">MAC init</span>    <span class="pv" id="tMI">—</span></div>
+        <div class="prow"><span class="pk">MAC run</span>     <span class="pv" id="tMR">—</span></div>
+        <div class="prow"><span class="pk">Total</span>       <span class="pv hi" id="tTot">—</span></div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="cp-section collapsed" id="secAbout">
+      <div class="cp-head" onclick="toggleSec('secAbout')">
+        About <span class="cp-arrow">▾</span>
+      </div>
+      <div class="cp-body" style="font-size:12px;color:var(--c-muted);line-height:1.6">
+        <p>Load a <code style="background:var(--c-surface2);padding:1px 4px;border-radius:3px;">results.json</code>
+        produced by the local MoonBit solver to visualise velocity and pressure fields.</p>
+        <p style="margin-top:8px;font-size:11px;color:#475569">
+          Author: Fenfen Yu · Beihang University<br>
+          License: Apache-2.0
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /control-panel -->
+
+</div><!-- /main -->
+
+<!-- ═══ STATUS BAR ════════════════════════════════════════════════════════════ -->
+<div class="statusbar">
+  <div class="sitem"><span class="sk">Max |u|</span><span class="sv" id="stU">—</span></div>
+  <div class="sitem"><span class="sk">Max |v|</span><span class="sv" id="stV">—</span></div>
+  <div class="sitem"><span class="sk">Max |V|</span><span class="sv" id="stMag">—</span></div>
+  <div class="sitem"><span class="sk">Div norm</span><span class="sv" id="stDiv">—</span></div>
+  <div class="sitem"><span class="sk">Grid</span><span class="sv" id="stGrid">—</span></div>
+  <span class="smsg loading" id="stMsg">No data loaded — drag a results.json or click Load</span>
+</div>
+
+<!-- ═══ HELP MODAL ════════════════════════════════════════════════════════════ -->
+<div id="helpOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);
+     z-index:1000;overflow-y:auto;padding:32px 16px" onclick="closeHelp(event)">
+  <div style="max-width:640px;margin:auto;background:var(--c-surface);border:1px solid var(--c-border);
+       border-radius:12px;padding:28px 32px;position:relative;color:var(--c-text)">
+    <!-- Close -->
+    <button onclick="closeHelpBtn()" style="position:absolute;top:14px;right:16px;background:none;
+        border:none;color:var(--c-muted);font-size:20px;cursor:pointer;line-height:1"
+        title="Close">&times;</button>
+
+    <!-- Title -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <div style="width:36px;height:36px;background:var(--c-accent);border-radius:8px;
+           display:flex;align-items:center;justify-content:center;font-size:18px">🌊</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#06b6d4);
+             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+          FlowLabLite — Results Viewer
+        </div>
+        <div style="font-size:11px;color:var(--c-muted)">
+          2D Lid-Driven Cavity Flow · MoonBit / WebAssembly
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage -->
+    <section style="margin-bottom:20px">
+      <h3 style="margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;
+          letter-spacing:0.07em;color:var(--c-muted)">Usage</h3>
+      <ol style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--c-text)">
+        <li>Build the solver: <code style="background:var(--c-surface2);padding:1px 5px;border-radius:3px">bash build_wasm.sh release</code></li>
+        <li>Run and export JSON: <code style="background:var(--c-surface2);padding:1px 5px;border-radius:3px">bash run_local.sh</code>
+            — produces <code style="background:var(--c-surface2);padding:1px 5px;border-radius:3px">results.json</code></li>
+        <li>Serve over HTTP: <code style="background:var(--c-surface2);padding:1px 5px;border-radius:3px">python -m http.server 8080</code></li>
+        <li>Open this page, then <strong>Load JSON</strong> (or drag-and-drop <code style="background:var(--c-surface2);padding:1px 5px;border-radius:3px">results.json</code>)</li>
+        <li>Use <strong>Demo</strong> to load sample data without running the solver</li>
+      </ol>
+    </section>
+
+    <!-- Controls reference -->
+    <section style="margin-bottom:20px">
+      <h3 style="margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;
+          letter-spacing:0.07em;color:var(--c-muted)">Controls</h3>
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">BG dropdown</td>
+          <td style="padding:5px 0;line-height:1.5">Changes the coloured frame around each canvas panel (Dark / Black / Navy / Gray / White)</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">Isolines</td>
+          <td style="padding:5px 0;line-height:1.5">Toggle isocontour lines on Velocity or Pressure canvas. <em>n</em> = number of levels</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">u/v fields</td>
+          <td style="padding:5px 0;line-height:1.5">Shows separate x- and y-component velocity maps using a diverging blue–white–red colormap below the main plots</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">Arrow legend</td>
+          <td style="padding:5px 0;line-height:1.5">Reference scale below the velocity map: arrow length is proportional to flow speed</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">Chorin / SIMPLE / PCG / MAC</td>
+          <td style="padding:5px 0;line-height:1.5">Switch between solvers. Buttons are disabled if the JSON does not contain that solver's data. Regenerate with <code style="background:var(--c-surface2);padding:1px 3px;border-radius:2px">run_local.sh</code></td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--c-border)">
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">Playback</td>
+          <td style="padding:5px 0;line-height:1.5">Animates the fields from initial (zero) to final state. Contour lines sweep to their final positions</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 8px 5px 0;color:var(--c-muted);white-space:nowrap">Export</td>
+          <td style="padding:5px 0;line-height:1.5">Save velocity / pressure canvas as PNG, JPEG, or SVG at a chosen resolution; or download raw data as CSV</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- Parameters -->
+    <section style="margin-bottom:20px">
+      <h3 style="margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;
+          letter-spacing:0.07em;color:var(--c-muted)">Solver parameters (default)</h3>
+      <div style="font-size:12px;font-family:monospace;color:var(--c-text);line-height:1.9;
+           background:var(--c-surface2);border-radius:6px;padding:10px 14px">
+        Grid: 41 × 41 nodes (MAC: 40 × 40 cells) &nbsp;|&nbsp; Re = 20 &nbsp;|&nbsp; ρ = 1.0 &nbsp;|&nbsp; ν = 0.1<br>
+        Chorin: dt = 0.001, nt = 500 steps, nit = 50 (Poisson iterations/step)<br>
+        SIMPLE: α_p = 0.3, α_u = 0.7 (under-relaxation factors)<br>
+        PCG: Chorin projection with PCG pressure solve (Jacobi preconditioner)<br>
+        MAC: staggered Harlow-Welch grid, PCG pressure, ghost-cell BCs<br>
+        Domain: 2 × 2, dx = dy = 0.05
+      </div>
+    </section>
+
+    <!-- About / Developer -->
+    <section style="border-top:1px solid var(--c-border);padding-top:16px">
+      <h3 style="margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;
+          letter-spacing:0.07em;color:var(--c-muted)">About</h3>
+      <p style="font-size:13px;line-height:1.7;margin:0 0 10px">
+        Solves the 2D incompressible Navier-Stokes equations in a square lid-driven cavity.
+        The top boundary moves at <em>u</em> = 1; all other walls are no-slip.
+        Pressure is solved via a Poisson equation (Gauss-Seidel iterations per step).
+      </p>
+      <p style="font-size:12px;color:var(--c-muted);line-height:1.8;margin:0">
+        Solver: MoonBit → WebAssembly (wasm-gc, Chrome 115+)<br>
+        Author: <strong style="color:var(--c-text)">Fenfen Yu (余芬芬)</strong><br>
+        Affiliations: Beihang University &nbsp;·&nbsp; Ezhou Hi-Modeling Technology Co., Ltd.<br>
+        License: Apache-2.0
+      </p>
+      <p style="font-size:11px;color:#475569;margin:12px 0 0;text-align:center">
+        FlowLabLite &copy; 2026 Ezhou Hi-Modeling Technology Co., Ltd. &nbsp;|&nbsp; Apache-2.0
+      </p>
+    </section>
+  </div>
+</div>
+
+<!-- ═══ SCRIPT ════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+'use strict';
+
+// ── State ────────────────────────────────────────────────────────────────────
+let currentData  = null;
+let activeSolver = 'chorin'; // 'chorin' | 'simple'
+
+// Display settings
+const DS = {
+  bgClass:      'bg-dark',   // canvas-wrapper CSS class
+  velAuto:      true,
+  velMin:       0,
+  velMax:       1,
+  presAuto:     true,
+  presMin:      0,
+  presMax:      1,
+  velContours:  false,       // show isolines on velocity canvas
+  presContours: false,       // show isolines on pressure canvas
+  contourN:     10,          // number of isoline levels
+  contourColor: 'auto',      // 'auto' | hex string
+};
+
+// ── Canvas refs ──────────────────────────────────────────────────────────────
+const velCanvas  = document.getElementById('velCanvas');
+const presCanvas = document.getElementById('presCanvas');
+const velCtx     = velCanvas.getContext('2d');
+const presCtx    = presCanvas.getContext('2d');
+
+// ── Data helpers ─────────────────────────────────────────────────────────────
+function activeGrid()  {
+  if (activeSolver === 'simple' && currentData?.simple_grid?.length)
+    return currentData.simple_grid;
+  if (activeSolver === 'pcg' && currentData?.pcg_grid?.length)
+    return currentData.pcg_grid;
+  if (activeSolver === 'mac' && currentData?.mac_grid?.length)
+    return currentData.mac_grid;
+  return currentData?.grid ?? [];
+}
+function activeStats() {
+  if (activeSolver === 'simple' && currentData?.simple_statistics)
+    return currentData.simple_statistics;
+  if (activeSolver === 'pcg' && currentData?.pcg_statistics)
+    return currentData.pcg_statistics;
+  if (activeSolver === 'mac' && currentData?.mac_statistics)
+    return currentData.mac_statistics;
+  return currentData?.statistics ?? {};
+}
+// Grid dimensions depend on solver: MAC uses mac_nc×mac_nc cell-centres.
+function activeGridSize() {
+  if (activeSolver === 'mac') {
+    const nc = currentData?.config?.mac_nc ?? 40;
+    return { nx: nc, ny: nc };
+  }
+  return { nx: currentData?.config?.nx ?? 41, ny: currentData?.config?.ny ?? 41 };
+}
+
+// ── Solver toggle ─────────────────────────────────────────────────────────────
+window.setActiveSolver = function (s) {
+  activeSolver = s;
+  // toolbar buttons
+  ['btnChorin','btnSimple','btnPcg','btnMac'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'btn' + (id === 'btn' + s.charAt(0).toUpperCase() + s.slice(1) ? ' active' : '');
+  });
+  // header quick-switch buttons
+  ['hBtnChorin','hBtnSimple','hBtnPcg','hBtnMac'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'btn' + (id === 'hBtn' + s.charAt(0).toUpperCase() + s.slice(1) ? ' active' : '');
+  });
+  const isSimple = s === 'simple';
+  document.getElementById('sResRow').style.display = isSimple ? '' : 'none';
+  const lblMap = {
+    chorin: '(Chorin – transient)',
+    simple: '(SIMPLE – steady)',
+    pcg:    '(Chorin-PCG – transient)',
+    mac:    '(MAC staggered – transient)',
+  };
+  const lbl = lblMap[s] ?? '';
+  document.getElementById('velActiveLbl').textContent  = lbl;
+  document.getElementById('presActiveLbl').textContent = lbl;
+  const msgMap = {
+    chorin: 'Chorin active', simple: 'SIMPLE active',
+    pcg: 'PCG active', mac: 'MAC active',
+  };
+  document.getElementById('headerMsg').textContent = msgMap[s] ?? s;
+  if (currentData) { updateStats(); redrawAll(); }
+};
+
+// ── Background colour ─────────────────────────────────────────────────────────
+window.setBg = function (name) {
+  DS.bgClass = 'bg-' + name;
+  ['velWrapper','presWrapper','uWrapper','vWrapper'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'canvas-wrapper ' + DS.bgClass;
+  });
+  const sel = document.getElementById('bgSelect');
+  if (sel) sel.value = name;
+  if (currentData) redrawAll();
+};
+
+// ── Collapsible sections ──────────────────────────────────────────────────────
+window.toggleSec = function (id) {
+  document.getElementById(id).classList.toggle('collapsed');
+};
+
+// ── File loading ──────────────────────────────────────────────────────────────
+const dropZone  = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+document.getElementById('btnLoad').addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+// Also allow global drag-drop anywhere in the page
+document.body.addEventListener('dragover',  e => { e.preventDefault(); });
+document.body.addEventListener('drop', e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+
+document.getElementById('btnPaste').addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    loadJSON(text);
+  } catch {
+    const text = prompt('Paste JSON data here:');
+    if (text) loadJSON(text);
+  }
+});
+
+document.getElementById('btnSample').addEventListener('click', loadSampleData);
+document.getElementById('btnClear').addEventListener('click', clearAll);
+document.getElementById('btnCsv').addEventListener('click', downloadCsv);
+
+function handleFile(f) {
+  const r = new FileReader();
+  r.onload = e => loadJSON(e.target.result);
+  r.readAsText(f);
+}
+
+// ── Parse and ingest JSON ─────────────────────────────────────────────────────
+function loadJSON(text) {
+  try {
+    let src = text;
+    const sM = '===JSON_DATA_START===', eM = '===JSON_DATA_END===';
+    const si = text.indexOf(sM), ei = text.indexOf(eM);
+    if (si !== -1 && ei !== -1) src = text.substring(si + sM.length, ei).trim();
+
+    const data = JSON.parse(src);
+    if (!data.grid || !data.config) throw new Error('"config" and "grid" keys required');
+
+    currentData  = data;
+    activeSolver = 'chorin';
+
+    // Multi-solver detection
+    const hasSimple = Array.isArray(data.simple_grid) && data.simple_grid.length > 0;
+    const hasPcg    = Array.isArray(data.pcg_grid)    && data.pcg_grid.length    > 0;
+    const hasMac    = Array.isArray(data.mac_grid)    && data.mac_grid.length    > 0;
+    const hasMulti  = hasSimple || hasPcg || hasMac;
+    document.getElementById('solverBar').style.display  = hasMulti ? 'flex' : 'none';
+    document.getElementById('solverSep').style.display  = hasMulti ? ''     : 'none';
+    // Header solver switch: always show when data loaded
+    document.getElementById('headerSolverSwitch').style.display = 'flex';
+    document.getElementById('btnChorin').className  = 'btn active';
+    document.getElementById('btnSimple').className  = 'btn';
+    document.getElementById('btnPcg').className     = 'btn';
+    document.getElementById('btnMac').className     = 'btn';
+    document.getElementById('hBtnChorin').className = 'btn active';
+    document.getElementById('hBtnSimple').className = 'btn';
+    document.getElementById('hBtnPcg').className    = 'btn';
+    document.getElementById('hBtnMac').className    = 'btn';
+
+    const solverBtns = [
+      ['hBtnSimple', hasSimple, 'SIMPLE', 'No SIMPLE data in this JSON'],
+      ['hBtnPcg',    hasPcg,    'PCG',    'No PCG data in this JSON'],
+      ['hBtnMac',    hasMac,    'MAC',    'No MAC data in this JSON'],
+    ];
+    solverBtns.forEach(([id, has, label, noMsg]) => {
+      const el = document.getElementById(id);
+      el.disabled = !has;
+      el.title = has ? `Switch to ${label} solver view` : noMsg + ' — regenerate with run_local.sh';
+    });
+    document.getElementById('velActiveLbl').textContent  = '(Chorin – transient)';
+    document.getElementById('presActiveLbl').textContent = '(Chorin – transient)';
+    document.getElementById('sResRow').style.display = 'none';
+
+    // Timing panel
+    const hasTiming = data.timing?.enabled;
+    document.getElementById('secTiming').style.display = hasTiming ? '' : 'none';
+    if (hasTiming) {
+      const t = data.timing;
+      document.getElementById('tCI').textContent  = t.chorin_init_ms.toFixed(2)  + ' ms';
+      document.getElementById('tCR').textContent  = t.chorin_run_ms.toFixed(2)   + ' ms';
+      document.getElementById('tSI').textContent  = t.simple_init_ms.toFixed(2)  + ' ms';
+      document.getElementById('tSR').textContent  = t.simple_run_ms.toFixed(2)   + ' ms';
+      document.getElementById('tPI').textContent  = t.pcg_init_ms != null ? t.pcg_init_ms.toFixed(2) + ' ms' : '—';
+      document.getElementById('tPR').textContent  = t.pcg_run_ms  != null ? t.pcg_run_ms.toFixed(2)  + ' ms' : '—';
+      document.getElementById('tMI').textContent  = t.mac_init_ms != null ? t.mac_init_ms.toFixed(2) + ' ms' : '—';
+      document.getElementById('tMR').textContent  = t.mac_run_ms  != null ? t.mac_run_ms.toFixed(2)  + ' ms' : '—';
+      document.getElementById('tTot').textContent = t.total_ms.toFixed(2)        + ' ms';
+    }
+
+    // Reset playback to fully-converged state
+    animT = 1.0; animFrame = 0; animPlaying = false;
+    DS.playT = 1.0;
+    if (animTimerId) { clearTimeout(animTimerId); animTimerId = null; }
+    document.getElementById('playSlider').value = 100;
+    document.getElementById('playPct').textContent = '100%';
+    document.getElementById('playFrameInfo').textContent = '';
+
+    // Reset range overrides to auto
+    DS.velAuto  = true; DS.presAuto = true;
+    document.getElementById('velAutoChk').checked  = true;
+    document.getElementById('presAutoChk').checked = true;
+    setVelRangeEnabled(false);
+    setPresRangeEnabled(false);
+
+    // Show canvas grid, hide drop-zone; sync u/v wrappers to current bg
+    document.getElementById('dropZone').style.display   = 'none';
+    document.getElementById('canvasGrid').style.display = '';
+    // u/v grid shown only if checkbox is checked
+    const uvVisible = document.getElementById('showUVChk').checked;
+    document.getElementById('uvGrid').style.display  = uvVisible ? '' : 'none';
+    document.getElementById('uvLabel').style.display = uvVisible ? '' : 'none';
+    // sync u/v wrapper bg
+    document.getElementById('uWrapper').className = 'canvas-wrapper ' + DS.bgClass;
+    document.getElementById('vWrapper').className = 'canvas-wrapper ' + DS.bgClass;
+
+    updateStats();
+    redrawAll();
+
+    const pts = data.grid.length;
+    const solverLabels = ['Chorin'];
+    if (hasSimple) solverLabels.push('SIMPLE');
+    if (hasPcg)    solverLabels.push('PCG');
+    if (hasMac)    solverLabels.push('MAC');
+    setStatus('ok', `Loaded ${pts} pts (${solverLabels.join(' + ')})`);
+    document.getElementById('headerDot').className = 'dot';
+    document.getElementById('headerMsg').textContent = solverLabels.join(' + ');
+  } catch (err) {
+    setStatus('err', 'Parse error: ' + err.message);
+  }
+}
+
+// ── Update stats panel ────────────────────────────────────────────────────────
+function updateStats() {
+  const c = currentData.config;
+  const s = activeStats();
+  const { nx: gnx, ny: gny } = activeGridSize();
+  document.getElementById('pGrid').textContent   = gnx + ' × ' + gny + (activeSolver === 'mac' ? ' (cells)' : '');
+  document.getElementById('pSolver').textContent = (c.solver || 'chorin').toUpperCase();
+  // Show steps/iters relevant to the active solver
+  const stepsMap  = { chorin: c.nt, simple: c.simple_iters, pcg: c.pcg_steps, mac: c.mac_steps };
+  const stepsLbl  = { chorin: 'Chorin steps', simple: 'SIMPLE iters', pcg: 'PCG steps', mac: 'MAC steps' };
+  document.getElementById('pStepsLbl').textContent = stepsLbl[activeSolver] ?? 'Steps';
+  document.getElementById('pSteps').textContent    = stepsMap[activeSolver] ?? c.nt ?? '—';
+  document.getElementById('pSiters').textContent = c.simple_iters ?? '—';
+  document.getElementById('pRe').textContent     = (c.re ?? (c.rho * 2 / c.nu)).toFixed(1);
+  document.getElementById('pRho').textContent    = c.rho.toFixed(3);
+  document.getElementById('pNu').textContent     = c.nu.toFixed(4);
+  document.getElementById('pDt').textContent     = c.dt.toFixed(6);
+  document.getElementById('pNit').textContent    = c.nit;
+
+  document.getElementById('sActive').textContent  = activeSolver.toUpperCase();
+  document.getElementById('sMaxU').textContent    = s.max_u?.toFixed(4) ?? '—';
+  document.getElementById('sMaxV').textContent    = s.max_v?.toFixed(4) ?? '—';
+  document.getElementById('sMaxMag').textContent  = s.max_velocity_magnitude?.toFixed(4) ?? '—';
+  document.getElementById('sMaxP').textContent    = s.max_p?.toFixed(4) ?? '—';
+  document.getElementById('sMinP').textContent    = s.min_p?.toFixed(4) ?? '—';
+  document.getElementById('sDivN').textContent    = s.divergence_norm?.toExponential(3) ?? '—';
+  document.getElementById('sElap').textContent    =
+    (s.elapsed_seconds > 0) ? s.elapsed_seconds.toFixed(3) + ' s' : 'N/A';
+  if (activeSolver === 'simple' && s.residual !== undefined)
+    document.getElementById('sResid').textContent = s.residual.toExponential(4);
+
+  const cu = s.center_u ?? 0, cv = s.center_v ?? 0;
+  document.getElementById('cU').textContent   = cu.toFixed(6);
+  document.getElementById('cV').textContent   = cv.toFixed(6);
+  document.getElementById('cP').textContent   = (s.center_p ?? 0).toFixed(6);
+  document.getElementById('cMag').textContent = Math.hypot(cu, cv).toFixed(6);
+
+  // Status bar
+  document.getElementById('stU').textContent   = s.max_u?.toFixed(4)            ?? '—';
+  document.getElementById('stV').textContent   = s.max_v?.toFixed(4)            ?? '—';
+  document.getElementById('stMag').textContent = s.max_velocity_magnitude?.toFixed(4) ?? '—';
+  document.getElementById('stDiv').textContent = s.divergence_norm?.toExponential(3)  ?? '—';
+  document.getElementById('stGrid').textContent = gnx + '×' + gny;
+
+  // Colorbar labels (auto)
+  if (DS.velAuto) {
+    const vmax = s.max_velocity_magnitude ?? 0;
+    document.getElementById('velCbMin').textContent = '0.0000';
+    document.getElementById('velCbMax').textContent = vmax.toFixed(4);
+  }
+  if (DS.presAuto) {
+    document.getElementById('presCbMin').textContent = (s.min_p ?? 0).toFixed(4);
+    document.getElementById('presCbMax').textContent = (s.max_p ?? 0).toFixed(4);
+  }
+}
+
+// ── Range override controls ───────────────────────────────────────────────────
+function setVelRangeEnabled(en) {
+  ['velManMin','velManMax','velApply'].forEach(id =>
+    document.getElementById(id).disabled = !en);
+}
+function setPresRangeEnabled(en) {
+  ['presManMin','presManMax','presApply'].forEach(id =>
+    document.getElementById(id).disabled = !en);
+}
+
+document.getElementById('velAutoChk').addEventListener('change', function () {
+  DS.velAuto = this.checked;
+  setVelRangeEnabled(!this.checked);
+  if (this.checked && currentData) { updateStats(); redrawAll(); }
+});
+document.getElementById('presAutoChk').addEventListener('change', function () {
+  DS.presAuto = this.checked;
+  setPresRangeEnabled(!this.checked);
+  if (this.checked && currentData) { updateStats(); redrawAll(); }
+});
+
+window.applyVelRange = function () {
+  const mn = parseFloat(document.getElementById('velManMin').value);
+  const mx = parseFloat(document.getElementById('velManMax').value);
+  if (isNaN(mn) || isNaN(mx) || mn >= mx) {
+    alert('Invalid range: min must be < max'); return;
+  }
+  DS.velMin = mn; DS.velMax = mx;
+  document.getElementById('velCbMin').textContent = mn.toFixed(4);
+  document.getElementById('velCbMax').textContent = mx.toFixed(4);
+  if (currentData) drawVelocityField();
+};
+
+window.applyPresRange = function () {
+  const mn = parseFloat(document.getElementById('presManMin').value);
+  const mx = parseFloat(document.getElementById('presManMax').value);
+  if (isNaN(mn) || isNaN(mx) || mn >= mx) {
+    alert('Invalid range: min must be < max'); return;
+  }
+  DS.presMin = mn; DS.presMax = mx;
+  document.getElementById('presCbMin').textContent = mn.toFixed(4);
+  document.getElementById('presCbMax').textContent = mx.toFixed(4);
+  if (currentData) drawPressureField();
+};
+
+// ── Redraw ────────────────────────────────────────────────────────────────────
+function redrawAll() {
+  drawVelocityField();
+  drawPressureField();
+  drawArrowLegend();
+  if (document.getElementById('showUVChk').checked) {
+    drawUField();
+    drawVField();
+  }
+}
+
+// canvas bg fill colour derived from wrapper CSS class
+function canvasBgFill() {
+  const map = {
+    'bg-dark':  '#1a1a2e',
+    'bg-black': '#000000',
+    'bg-white': '#ffffff',
+    'bg-gray':  '#6b7280',
+    'bg-navy':  '#0a1128',
+  };
+  return map[DS.bgClass] ?? '#1a1a2e';
+}
+// arrow colour adapted to bg lightness
+function arrowColor() {
+  return DS.bgClass === 'bg-white' ? 'rgba(0,0,0,0.55)' : 'rgba(240,240,240,0.65)';
+}
+// text label colour
+function labelColor() {
+  return DS.bgClass === 'bg-white' ? '#c00' : '#ff6666';
+}
+
+function drawVelocityField() {
+  if (!currentData) return;
+  const cfg  = currentData.config;
+  const { nx, ny } = activeGridSize();
+  const w = velCanvas.width, h = velCanvas.height;
+  const stats  = activeStats();
+  const maxMag = DS.velAuto
+    ? (stats.max_velocity_magnitude || 1)
+    : DS.velMax;
+  const minMag = DS.velAuto ? 0 : DS.velMin;
+  const range  = Math.max(maxMag - minMag, 1e-9);
+
+  // Background fill
+  velCtx.fillStyle = canvasBgFill();
+  velCtx.fillRect(0, 0, w, h);
+
+  // Build grid lookup
+  const grid = Array.from({length: ny}, () => new Array(nx));
+  activeGrid().forEach(pt => { grid[pt.i][pt.j] = pt; });
+
+  // Bilinear fill via ImageData
+  const img = velCtx.createImageData(w, h);
+  const playScale = DS.playT ?? 1;
+  for (let py = 0; py < h; py++) {
+    for (let px = 0; px < w; px++) {
+      const gx = px / (w - 1) * (nx - 1);
+      const gy = (1 - py / (h - 1)) * (ny - 1);
+      const j0 = Math.floor(gx), j1 = Math.min(j0 + 1, nx - 1);
+      const i0 = Math.floor(gy), i1 = Math.min(i0 + 1, ny - 1);
+      const tx = gx - j0, ty = gy - i0;
+      const p00 = grid[i0][j0], p10 = grid[i1][j0];
+      const p01 = grid[i0][j1], p11 = grid[i1][j1];
+      if (!p00 || !p10 || !p01 || !p11) continue;
+      const mag = (p00.magnitude*(1-tx)*(1-ty) + p01.magnitude*tx*(1-ty) +
+                   p10.magnitude*(1-tx)*ty     + p11.magnitude*tx*ty) * playScale;
+      const t   = Math.max(0, Math.min(1, (mag - minMag) / range));
+      const c   = jetColor(t);
+      const idx = (py * w + px) * 4;
+      img.data[idx]   = c[0];
+      img.data[idx+1] = c[1];
+      img.data[idx+2] = c[2];
+      img.data[idx+3] = 255;
+    }
+  }
+  velCtx.putImageData(img, 0, 0);
+
+  // Velocity arrows — scaled by playScale so arrows shrink during animation
+  const step = Math.max(1, Math.floor(nx / 20));
+  const arrowScale = (w / nx * step * 0.85) / (maxMag || 1);
+  velCtx.strokeStyle = arrowColor();
+  velCtx.lineWidth = 1;
+  activeGrid().forEach(pt => {
+    if (pt.i % step !== 0 || pt.j % step !== 0) return;
+    const px = (pt.x / 2) * w;
+    const py = (1 - pt.y / 2) * h;
+    drawArrow(velCtx, px, py,
+      px + pt.u * arrowScale * playScale,
+      py - pt.v * arrowScale * playScale);
+  });
+
+  // Isolines overlay — levels use full-range; data values are scaled by playT so
+  // contours animate (sweep toward final positions) instead of staying fixed.
+  if (DS.velContours) {
+    const col = DS.contourColor === 'auto' ? arrowColor() : DS.contourColor;
+    drawContours(velCtx, activeGrid(), nx, ny, w, h,
+      DS.contourN, minMag, maxMag,
+      pt => pt.magnitude * playScale, col);
+  }
+
+  // Border & label (font size adapts to canvas resolution)
+  velCtx.strokeStyle = arrowColor();
+  velCtx.lineWidth = 2;
+  velCtx.strokeRect(1, 1, w - 2, h - 2);
+  velCtx.fillStyle = labelColor();
+  const labelFontPx = Math.max(9, Math.round(w / 45));
+  velCtx.font = `${labelFontPx}px monospace`;
+  velCtx.fillText('Moving Lid  u = 1.0 \u2192', 8, labelFontPx + 5);
+}
+
+function drawPressureField() {
+  if (!currentData) return;
+  const cfg  = currentData.config;
+  const { nx, ny } = activeGridSize();
+  const w = presCanvas.width, h = presCanvas.height;
+  const stats  = activeStats();
+  const autoMinP = stats.min_p ?? 0, autoMaxP = stats.max_p ?? 1;
+  const minP  = DS.presAuto ? autoMinP : DS.presMin;
+  const maxP  = DS.presAuto ? autoMaxP : DS.presMax;
+  const range = Math.max(maxP - minP, 1e-9);
+
+  presCtx.fillStyle = canvasBgFill();
+  presCtx.fillRect(0, 0, w, h);
+
+  const grid = Array.from({length: ny}, () => new Array(nx));
+  activeGrid().forEach(pt => { grid[pt.i][pt.j] = pt; });
+
+  const img = presCtx.createImageData(w, h);
+  const playScaleP = DS.playT ?? 1;
+  for (let py = 0; py < h; py++) {
+    for (let px = 0; px < w; px++) {
+      const gx = px / (w - 1) * (nx - 1);
+      const gy = (1 - py / (h - 1)) * (ny - 1);
+      const j0 = Math.floor(gx), j1 = Math.min(j0 + 1, nx - 1);
+      const i0 = Math.floor(gy), i1 = Math.min(i0 + 1, ny - 1);
+      const tx = gx - j0, ty = gy - i0;
+      const p00 = grid[i0][j0], p10 = grid[i1][j0];
+      const p01 = grid[i0][j1], p11 = grid[i1][j1];
+      if (!p00 || !p10 || !p01 || !p11) continue;
+      const pval = ((p00.p||0)*(1-tx)*(1-ty) + (p01.p||0)*tx*(1-ty) +
+                    (p10.p||0)*(1-tx)*ty     + (p11.p||0)*tx*ty) * playScaleP;
+      const t   = Math.max(0, Math.min(1, (pval - minP * playScaleP) / range));
+      const c   = pressureColor(t);
+      const idx = (py * w + px) * 4;
+      img.data[idx]   = c[0];
+      img.data[idx+1] = c[1];
+      img.data[idx+2] = c[2];
+      img.data[idx+3] = 255;
+    }
+  }
+  presCtx.putImageData(img, 0, 0);
+
+  // Isolines overlay — levels use full-range; data values are scaled by playT so
+  // contours animate toward final positions instead of being fixed.
+  if (DS.presContours) {
+    const col = DS.contourColor === 'auto' ? arrowColor() : DS.contourColor;
+    drawContours(presCtx, activeGrid(), nx, ny, w, h,
+      DS.contourN, minP, maxP,
+      pt => (pt.p || 0) * playScaleP, col);
+  }
+
+  presCtx.strokeStyle = arrowColor();
+  presCtx.lineWidth = 2;
+  presCtx.strokeRect(1, 1, w - 2, h - 2);
+}
+
+// ── Contour / isoline controls ────────────────────────────────────────────────
+window.onContourChange = function () {
+  DS.velContours  = document.getElementById('velContourChk').checked;
+  DS.presContours = document.getElementById('presContourChk').checked;
+  DS.contourN     = Math.max(2, Math.min(30, parseInt(document.getElementById('contourN').value) || 10));
+  DS.contourColor = document.getElementById('contourColor').value;
+  if (currentData) redrawAll();
+};
+
+// Marching-squares isoline drawing.
+// gridArr  – activeGrid() array of {i,j,…}
+// valFn    – pt → scalar field value to contour
+// nLevels  – number of isolines to draw
+// vMin/vMax– field range
+function drawContours(ctx, gridArr, nx, ny, w, h, nLevels, vMin, vMax, valFn, color) {
+  if (nLevels < 2) return;
+
+  // Build 2D lookup (row i, col j)
+  const F = Array.from({length: ny}, () => new Float64Array(nx));
+  gridArr.forEach(pt => { F[pt.i][pt.j] = valFn(pt); });
+
+  // Canvas coordinate helpers
+  const cx = j => j / (nx - 1) * w;
+  const cy = i => (1 - i / (ny - 1)) * h;
+
+  // Interpolated crossing point along an axis-aligned grid edge
+  // a0 and a1 are the axis-0 indices, b = fixed axis-1 index
+  // dir: 'h' = horizontal edge (fixed i), 'v' = vertical edge (fixed j)
+  const cross = (i0, j0, i1, j1, level) => {
+    const f0 = F[i0][j0], f1 = F[i1][j1];
+    if (f0 === f1) return [cx(j0), cy(i0)];
+    const t = (level - f0) / (f1 - f0);
+    return [cx(j0) + t * (cx(j1) - cx(j0)), cy(i0) + t * (cy(i1) - cy(i0))];
+  };
+
+  // Marching-squares lookup: case → list of [edge-pair, edge-pair] segments
+  // Edges: 0=bottom(i,j)→(i,j+1)  1=right(i,j+1)→(i+1,j+1)
+  //        2=top(i+1,j)→(i+1,j+1) 3=left(i,j)→(i+1,j)
+  const SEGS = {
+    1:  [['b','l']], 2: [['b','r']], 3: [['l','r']], 4: [['r','t']],
+    5:  [['b','r'],['l','t']],       6: [['b','t']], 7: [['l','t']],
+    8:  [['t','l']], 9: [['b','t']], 10:[['b','l'],['r','t']], 11:[['r','t']],
+    12: [['l','r']], 13:[['b','r']], 14:[['b','l']],
+  };
+
+  ctx.save();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.font = 'bold 8px monospace';
+  ctx.textBaseline = 'middle';
+
+  for (let k = 1; k < nLevels; k++) {
+    const level = vMin + k / nLevels * (vMax - vMin);
+    const labelStr = Math.abs(level) < 1e-4 && level !== 0
+      ? level.toExponential(1) : level.toPrecision(3);
+    const midpoints = [];   // collect segment midpoints for label placement
+
+    ctx.beginPath();
+    for (let i = 0; i < ny - 1; i++) {
+      for (let j = 0; j < nx - 1; j++) {
+        const fBL = F[i][j], fBR = F[i][j+1];
+        const fTL = F[i+1][j], fTR = F[i+1][j+1];
+        const ms = ((fBL >= level) ? 1 : 0) | ((fBR >= level) ? 2 : 0) |
+                   ((fTR >= level) ? 4 : 0) | ((fTL >= level) ? 8 : 0);
+        const segs = SEGS[ms]; if (!segs) continue;
+        for (const [e1, e2] of segs) {
+          const pt = (e) => {
+            if (e==='b') return cross(i,   j,   i,   j+1, level);
+            if (e==='r') return cross(i,   j+1, i+1, j+1, level);
+            if (e==='t') return cross(i+1, j,   i+1, j+1, level);
+            if (e==='l') return cross(i,   j,   i+1, j,   level);
+          };
+          const [ax,ay] = pt(e1), [bx,by] = pt(e2);
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          midpoints.push([(ax+bx)/2, (ay+by)/2]);
+        }
+      }
+    }
+    ctx.stroke();
+
+    // Draw value labels: up to 3 per level, evenly spaced through segment list
+    if (midpoints.length === 0) continue;
+    const labelStep = Math.max(1, Math.floor(midpoints.length / 3));
+    for (let si = 0; si < midpoints.length; si += labelStep) {
+      const [lx, ly] = midpoints[si];
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.lineWidth = 2.5;
+      ctx.strokeText(labelStr, lx + 2, ly);
+      ctx.restore();
+      ctx.fillText(labelStr, lx + 2, ly);
+    }
+  }
+  ctx.restore();
+}
+
+// ── Playback animation ────────────────────────────────────────────────────────
+// Animates by scaling the field values by playT (0→1), simulating convergence.
+let animT      = 1.0;    // 0..1; 1 = full field (default after load)
+let animFrame  = 0;
+let animTotal  = 60;
+let animPlaying = false;
+let animTimerId = null;
+
+DS.playT = 1.0;  // field scale factor used in draw functions
+
+function playStart() {
+  if (!currentData) { alert('Load data first'); return; }
+  if (animT >= 1) playReset();
+  animPlaying = true;
+  animSchedule();
+}
+function playPause() {
+  animPlaying = false;
+  if (animTimerId) { clearTimeout(animTimerId); animTimerId = null; }
+}
+function playReset() {
+  playPause();
+  animT = 0; animFrame = 0;
+  DS.playT = 0;
+  updatePlayUI();
+  if (currentData) redrawAll();
+}
+window.playStep = function () {
+  if (!currentData) return;
+  animTotal = parseInt(document.getElementById('playFrames').value) || 60;
+  animFrame = Math.min(animFrame + 1, animTotal);
+  animT = animFrame / animTotal;
+  DS.playT = animT;
+  updatePlayUI();
+  redrawAll();
+};
+window.playStart  = playStart;
+window.playPause  = playPause;
+window.playReset  = playReset;
+window.playSeek   = function (v) {
+  playPause();
+  animTotal = parseInt(document.getElementById('playFrames').value) || 60;
+  animFrame = Math.round(v / 100 * animTotal);
+  animT = animFrame / animTotal;
+  DS.playT = animT;
+  updatePlayUI();
+  if (currentData) redrawAll();
+};
+
+function animSchedule() {
+  if (!animPlaying) return;
+  animTotal = parseInt(document.getElementById('playFrames').value) || 60;
+  const fps  = parseInt(document.getElementById('playSpeed').value) || 8;
+  const delay = Math.round(1000 / fps);
+  animTimerId = setTimeout(() => {
+    if (!animPlaying) return;
+    animFrame = Math.min(animFrame + 1, animTotal);
+    animT = animFrame / animTotal;
+    DS.playT = animT;
+    updatePlayUI();
+    redrawAll();
+    if (animT < 1) animSchedule();
+    else { animPlaying = false; }
+  }, delay);
+}
+
+function updatePlayUI() {
+  const pct = Math.round(animT * 100);
+  document.getElementById('playPct').textContent = pct + '%';
+  document.getElementById('playSlider').value = pct;
+  document.getElementById('playFrameInfo').textContent =
+    `frame ${animFrame} / ${animTotal}`;
+}
+
+document.getElementById('playSpeed').addEventListener('input', function () {
+  document.getElementById('playSpeedLbl').textContent = this.value + ' fps';
+});
+
+// ── Colormaps ─────────────────────────────────────────────────────────────────
+function jetColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  const s = [[0,0,128],[0,0,255],[0,255,255],[0,255,0],[255,255,0],[255,0,0]];
+  const f = t * (s.length - 1);
+  const lo = Math.floor(f), hi = Math.min(lo + 1, s.length - 1), r = f - lo;
+  return [
+    Math.round(s[lo][0] + (s[hi][0] - s[lo][0]) * r),
+    Math.round(s[lo][1] + (s[hi][1] - s[lo][1]) * r),
+    Math.round(s[lo][2] + (s[hi][2] - s[lo][2]) * r),
+  ];
+}
+
+function pressureColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  const s = [[0,0,255],[0,255,255],[255,128,0],[255,0,0]];
+  const f = t * (s.length - 1);
+  const lo = Math.floor(f), hi = Math.min(lo + 1, s.length - 1), r = f - lo;
+  return [
+    Math.round(s[lo][0] + (s[hi][0] - s[lo][0]) * r),
+    Math.round(s[lo][1] + (s[hi][1] - s[lo][1]) * r),
+    Math.round(s[lo][2] + (s[hi][2] - s[lo][2]) * r),
+  ];
+}
+
+// ── Arrow drawing ─────────────────────────────────────────────────────────────
+function drawArrow(ctx, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.hypot(dx, dy);
+  if (len < 2) return;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  const al = Math.min(7, len * 0.35), ang = Math.atan2(dy, dx), a = Math.PI / 7;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - al * Math.cos(ang - a), y2 - al * Math.sin(ang - a));
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - al * Math.cos(ang + a), y2 - al * Math.sin(ang + a));
+  ctx.stroke();
+}
+
+// ── Export image ─────────────────────────────────────────────────────────────
+document.getElementById('btnExport').addEventListener('click', exportImage);
+
+function exportImage() {
+  if (!currentData) { alert('No data loaded'); return; }
+  const field  = document.getElementById('exportField').value;  // 'velocity'|'pressure'|'both'
+  const fmt    = document.getElementById('exportFmt').value;    // 'png'|'jpg'|'svg'
+  const px     = Math.max(256, Math.min(4096, parseInt(document.getElementById('exportPx').value) || 1024));
+  const solver = activeSolver;
+  const stamp  = new Date().toISOString().slice(0,19).replace(/[T:]/g,'-');
+
+  if (fmt === 'svg') {
+    exportSVG(field, px, solver, stamp);
+    return;
+  }
+
+  const targets = field === 'both'
+    ? [['velocity', velCanvas, 'vel'], ['pressure', presCanvas, 'pres']]
+    : field === 'velocity'
+      ? [['velocity', velCanvas, 'vel']]
+      : [['pressure', presCanvas, 'pres']];
+
+  for (const [name, srcCanvas, tag] of targets) {
+    // Render at export resolution into an offscreen canvas
+    const off  = document.createElement('canvas');
+    off.width  = px;
+    off.height = px;
+    const offCtx = off.getContext('2d');
+
+    // Save/restore DS references so we draw into off at the right size
+    const origW = srcCanvas.width, origH = srcCanvas.height;
+    srcCanvas.width  = px;
+    srcCanvas.height = px;
+    const origCtx = srcCanvas === velCanvas ? velCtx : presCtx;
+
+    if (name === 'velocity') drawVelocityField();
+    else                      drawPressureField();
+
+    // Copy to offscreen
+    offCtx.drawImage(srcCanvas, 0, 0, px, px);
+
+    // Restore source canvas
+    srcCanvas.width  = origW;
+    srcCanvas.height = origH;
+    if (name === 'velocity') drawVelocityField();
+    else                      drawPressureField();
+
+    // Download
+    const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
+    const ext  = fmt === 'jpg' ? 'jpg'        : 'png';
+    const qual = fmt === 'jpg' ? 0.92 : undefined;
+    const url  = off.toDataURL(mime, qual);
+    triggerDownload(url, `flowlab_${solver}_${tag}_${px}px_${stamp}.${ext}`);
+  }
+}
+
+// SVG export: re-renders the field as a grid of colored <rect> elements
+function exportSVG(field, px, solver, stamp) {
+  const cfg = currentData.config;
+  const { nx, ny } = activeGridSize();
+  const stats = activeStats();
+
+  const renderField = (tag, title, getColor) => {
+    const cw = (px / nx).toFixed(2), ch = (px / ny).toFixed(2);
+    let rects = '';
+    for (let i = 0; i < ny; i++) {
+      for (let j = 0; j < nx; j++) {
+        const x = (j / nx * px).toFixed(2);
+        const y = ((ny - 1 - i) / ny * px).toFixed(2);
+        rects += `<rect x="${x}" y="${y}" width="${cw}" height="${ch}" fill="${getColor(i,j)}"/>`;
+      }
+    }
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}" viewBox="0 0 ${px} ${px}">\n` +
+      `<title>${title} – ${solver} solver</title>\n` +
+      `<rect width="${px}" height="${px}" fill="${canvasBgFill()}"/>\n` +
+      rects + '\n</svg>';
+    const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    triggerDownload(url, `flowlab_${solver}_${tag}_${px}px_${stamp}.svg`);
+  };
+
+  const gridLookup = (() => {
+    const g = Array.from({length: ny}, () => new Array(nx));
+    activeGrid().forEach(pt => { g[pt.i][pt.j] = pt; });
+    return g;
+  })();
+
+  if (field === 'velocity' || field === 'both') {
+    const maxMag = DS.velAuto ? (stats.max_velocity_magnitude || 1) : DS.velMax;
+    const minMag = DS.velAuto ? 0 : DS.velMin;
+    const range  = Math.max(maxMag - minMag, 1e-9);
+    renderField('vel', 'Velocity Magnitude', (i, j) => {
+      const pt = gridLookup[i]?.[j];
+      if (!pt) return '#000';
+      const t = Math.max(0, Math.min(1, (pt.magnitude - minMag) / range));
+      const [r,g,b] = jetColor(t);
+      return `rgb(${r},${g},${b})`;
+    });
+  }
+  if (field === 'pressure' || field === 'both') {
+    const minP  = DS.presAuto ? (stats.min_p ?? 0) : DS.presMin;
+    const maxP  = DS.presAuto ? (stats.max_p ?? 1) : DS.presMax;
+    const range = Math.max(maxP - minP, 1e-9);
+    renderField('pres', 'Pressure Field', (i, j) => {
+      const pt = gridLookup[i]?.[j];
+      if (!pt) return '#000';
+      const t = Math.max(0, Math.min(1, ((pt.p || 0) - minP) / range));
+      const [r,g,b] = pressureColor(t);
+      return `rgb(${r},${g},${b})`;
+    });
+  }
+}
+
+function triggerDownload(url, filename) {
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ── u/v component field canvases ─────────────────────────────────────────────
+const uCanvas  = document.getElementById('uCanvas');
+const vCanvas  = document.getElementById('vCanvas');
+const uCtx     = uCanvas.getContext('2d');
+const vCtx     = vCanvas.getContext('2d');
+
+window.toggleUVGrid = function () {
+  const show = document.getElementById('showUVChk').checked;
+  document.getElementById('uvGrid').style.display  = (show && currentData) ? '' : 'none';
+  document.getElementById('uvLabel').style.display = (show && currentData) ? '' : 'none';
+  if (show && currentData) { drawUField(); drawVField(); }
+};
+
+// Diverging colormap: blue (neg) → white (zero) → red (pos), t ∈ [0,1], mid=0.5
+function divergingColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  if (t < 0.5) {
+    const s = t * 2;                 // 0→1 as t: 0→0.5
+    return [Math.round(s*255), Math.round(s*255), 255];   // blue→white
+  } else {
+    const s = (1-t) * 2;            // 1→0 as t: 0.5→1
+    return [255, Math.round(s*255), Math.round(s*255)];   // white→red
+  }
+}
+
+function drawComponentField(ctx, canvas, getVal, labelIds) {
+  if (!currentData) return;
+  const { nx, ny } = activeGridSize();
+  const w = canvas.width, h = canvas.height;
+  const playScale = DS.playT ?? 1;
+
+  // Symmetric range around zero
+  let maxAbs = 0;
+  activeGrid().forEach(pt => { const v = Math.abs(getVal(pt)); if (v > maxAbs) maxAbs = v; });
+  maxAbs = (maxAbs * playScale) || 1e-9;
+
+  ctx.fillStyle = canvasBgFill();
+  ctx.fillRect(0, 0, w, h);
+
+  const grid = Array.from({length: ny}, () => new Array(nx));
+  activeGrid().forEach(pt => { grid[pt.i][pt.j] = pt; });
+
+  const img = ctx.createImageData(w, h);
+  for (let py = 0; py < h; py++) {
+    for (let px = 0; px < w; px++) {
+      const gx = px/(w-1)*(nx-1), gy = (1-py/(h-1))*(ny-1);
+      const j0 = Math.floor(gx), j1 = Math.min(j0+1, nx-1);
+      const i0 = Math.floor(gy), i1 = Math.min(i0+1, ny-1);
+      const tx = gx-j0, ty = gy-i0;
+      const p00=grid[i0][j0], p10=grid[i1][j0], p01=grid[i0][j1], p11=grid[i1][j1];
+      if (!p00||!p10||!p01||!p11) continue;
+      const val = (getVal(p00)*(1-tx)*(1-ty) + getVal(p01)*tx*(1-ty) +
+                   getVal(p10)*(1-tx)*ty     + getVal(p11)*tx*ty) * playScale;
+      const t = (val/maxAbs + 1) / 2;  // [-maxAbs, maxAbs] → [0, 1]
+      const c = divergingColor(t);
+      const idx = (py*w+px)*4;
+      img.data[idx]=c[0]; img.data[idx+1]=c[1]; img.data[idx+2]=c[2]; img.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  ctx.strokeStyle = arrowColor();
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1, 1, w-2, h-2);
+
+  if (labelIds) {
+    document.getElementById(labelIds[0]).textContent = (-maxAbs).toFixed(4);
+    document.getElementById(labelIds[1]).textContent = maxAbs.toFixed(4);
+  }
+}
+
+function drawUField() { drawComponentField(uCtx, uCanvas, pt => pt.u, ['uCbMin','uCbMax']); }
+function drawVField() { drawComponentField(vCtx, vCanvas, pt => pt.v, ['vCbMin','vCbMax']); }
+
+// ── Arrow vector legend ────────────────────────────────────────────────────────
+function drawArrowLegend() {
+  const canvas = document.getElementById('arrowLegendCanvas');
+  if (!canvas || !currentData) return;
+  const dpr  = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const cw   = Math.max(rect.width || 400, 200);
+  const ch   = 44;
+  canvas.width  = Math.round(cw * dpr);
+  canvas.height = Math.round(ch * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const stats  = activeStats();
+  const maxMag = DS.velAuto ? (stats.max_velocity_magnitude || 1) : DS.velMax;
+  const effMax = maxMag * (DS.playT ?? 1);
+
+  ctx.fillStyle = canvasBgFill();
+  ctx.fillRect(0, 0, cw, ch);
+
+  const fracs  = [0.25, 0.5, 0.75, 1.0];
+  const padL = 8;
+  const usable = cw - padL - 8;
+  const slot   = usable / fracs.length;
+  const maxLen = slot * 0.68;
+  const midY   = 15;
+
+  ctx.strokeStyle = arrowColor();
+  ctx.fillStyle   = arrowColor();
+  ctx.lineWidth   = 1.4;
+  ctx.textAlign   = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = '10px monospace';
+
+  fracs.forEach((frac, idx) => {
+    const x0 = padL + idx * slot + slot * 0.06;
+    const len = frac * maxLen;
+    const x1  = x0 + len;
+    ctx.beginPath(); ctx.moveTo(x0, midY); ctx.lineTo(x1, midY); ctx.stroke();
+    const al = Math.min(6, len * 0.28), ang = Math.PI/7;
+    ctx.beginPath();
+    ctx.moveTo(x1, midY);
+    ctx.lineTo(x1-al*Math.cos(ang), midY-al*Math.sin(ang));
+    ctx.moveTo(x1, midY);
+    ctx.lineTo(x1-al*Math.cos(ang), midY+al*Math.sin(ang));
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(x0, midY, 2, 0, Math.PI*2); ctx.fill();
+    ctx.fillText((effMax * frac).toFixed(3), (x0+x1)/2, midY+7);
+  });
+
+  ctx.textAlign = 'left';
+  ctx.font = '9px monospace';
+  ctx.fillStyle = arrowColor();
+  ctx.fillText('speed (m/s)', padL, ch-12);
+}
+
+// ── Help modal ────────────────────────────────────────────────────────────────
+window.showHelp = function () {
+  document.getElementById('helpOverlay').style.display = '';
+};
+window.closeHelp = function (e) {
+  // Close when clicking the dark overlay (not the modal card itself)
+  if (e.target === document.getElementById('helpOverlay'))
+    document.getElementById('helpOverlay').style.display = 'none';
+};
+window.closeHelpBtn = function () {
+  document.getElementById('helpOverlay').style.display = 'none';
+};
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('helpOverlay').style.display = 'none';
+});
+
+// ── Fullscreen ────────────────────────────────────────────────────────────────
+document.getElementById('btnFs').addEventListener('click', () => {
+  const el = document.getElementById('vizArea');
+  if (!document.fullscreenElement) {
+    el.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+// ── Clear ─────────────────────────────────────────────────────────────────────
+function clearAll() {
+  velCtx.clearRect(0,  0, velCanvas.width,  velCanvas.height);
+  presCtx.clearRect(0, 0, presCanvas.width, presCanvas.height);
+  uCtx.clearRect(0, 0, uCanvas.width, uCanvas.height);
+  vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
+  const alc = document.getElementById('arrowLegendCanvas');
+  if (alc) alc.getContext('2d').clearRect(0, 0, alc.width, alc.height);
+  currentData = null; activeSolver = 'chorin';
+  document.getElementById('dropZone').style.display        = '';
+  document.getElementById('canvasGrid').style.display      = 'none';
+  document.getElementById('uvGrid').style.display          = 'none';
+  document.getElementById('uvLabel').style.display         = 'none';
+  document.getElementById('solverBar').style.display       = 'none';
+  document.getElementById('solverSep').style.display       = 'none';
+  document.getElementById('secTiming').style.display       = 'none';
+  document.getElementById('headerSolverSwitch').style.display = 'none';
+  document.getElementById('hBtnSimple').disabled = false;
+  document.getElementById('hBtnPcg').disabled    = false;
+  document.getElementById('hBtnMac').disabled    = false;
+  document.getElementById('headerDot').className = 'dot idle';
+  document.getElementById('headerMsg').textContent = 'No data';
+  [
+    'pGrid','pSolver','pSteps','pSiters','pRe','pRho','pNu','pDt','pNit',
+    'sActive','sMaxU','sMaxV','sMaxMag','sMaxP','sMinP','sDivN','sElap',
+    'cU','cV','cP','cMag',
+    'stU','stV','stMag','stDiv','stGrid',
+    'velCbMax','presCbMin','presCbMax',
+  ].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
+  document.getElementById('velCbMin').textContent = '0.0000';
+  setStatus('loading', 'Cleared — load new data to visualise');
+}
+
+// ── CSV download ──────────────────────────────────────────────────────────────
+function downloadCsv() {
+  if (!currentData) { alert('No data loaded'); return; }
+  let csv = 'solver,i,j,x,y,u,v,magnitude,pressure\n';
+  activeGrid().forEach(pt => {
+    csv += `${activeSolver},${pt.i},${pt.j},${pt.x},${pt.y},${pt.u},${pt.v},${pt.magnitude},${pt.p}\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+  a.download = `flowlab_${activeSolver}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ── Status helpers ────────────────────────────────────────────────────────────
+function setStatus(type, msg) {
+  const el = document.getElementById('stMsg');
+  el.textContent = msg;
+  el.className = 'smsg ' + (type === 'ok' ? 'ok' : type === 'err' ? 'err' : 'loading');
+}
+
+// ── Sample data ───────────────────────────────────────────────────────────────
+function loadSampleData() {
+  const nx = 11, ny = 11, grid = [];
+  for (let i = 0; i < ny; i++) {
+    for (let j = 0; j < nx; j++) {
+      const x = 2 * j / (nx - 1), y = 2 * i / (ny - 1);
+      let u = 0, v = 0;
+      if (i === ny - 1) { u = 1; }
+      else if (i > 0 && j > 0 && j < nx - 1) {
+        const r = Math.hypot(x - 1, y - 1);
+        u = -0.3 * Math.exp(-r) * (y - 1);
+        v =  0.3 * Math.exp(-r) * (x - 1);
+      }
+      grid.push({i, j, x, y, u, v,
+        magnitude: Math.hypot(u, v),
+        p: Math.sin(Math.PI*x/2) * Math.cos(Math.PI*y/2) * 0.05});
+    }
+  }
+  loadJSON(JSON.stringify({
+    config: {nx, ny, nt: 50, nit: 50, dt: 0.001, dx: 0.2, dy: 0.2,
+             rho: 1, nu: 0.1, re: 20, solver: 'chorin', simple_iters: 0},
+    statistics: {
+      max_u: 1, max_v: 0.15, max_p: 0.05, min_p: -0.05,
+      max_velocity_magnitude: 1, divergence_norm: 0.001,
+      center_u: -0.01, center_v: 0.001, center_p: 0.003, elapsed_seconds: 0,
+    },
+    grid,
+  }));
+}
+
+})(); // end IIFE
+
+// ── Colour theme cycling ──────────────────────────────────────────────────────
+const THEMES = ['', 'theme-light', 'theme-transparent', 'theme-print'];
+const THEME_LABELS = { '': '🌙 Dark', 'theme-light': '☀️ Light', 'theme-transparent': '🪟 Glass', 'theme-print': '🖨️ Print' };
+let themeIdx = 0;
+function cycleTheme() {
+    document.body.classList.remove(THEMES[themeIdx]);
+    themeIdx = (themeIdx + 1) % THEMES.length;
+    document.body.classList.add(THEMES[themeIdx]);
+    document.getElementById('themeBtn').title = 'Theme: ' + THEME_LABELS[THEMES[(themeIdx + 1) % THEMES.length]];
+    try { localStorage.setItem('flowlab_theme', themeIdx); } catch(_) {}
+}
+(function restoreTheme() {
+    try {
+        const saved = parseInt(localStorage.getItem('flowlab_theme') || '0');
+        if (saved > 0 && saved < THEMES.length) { themeIdx = saved - 1; cycleTheme(); }
+    } catch(_) {}
+})();
+</script>
+</body>
+</html>

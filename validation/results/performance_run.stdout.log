@@ -1,0 +1,63 @@
+{
+  "method": {
+    "timed_scope": "prebuilt release WASM executed by moonrun; process startup, solver run, and centerline serialization; compilation excluded",
+    "warmups_discarded_per_solver": 3,
+    "measured_repetitions_per_solver": 15,
+    "ordering": "rotating solver order per measured round",
+    "grid": "41x41",
+    "workloads": {
+      "chorin": 500,
+      "simple": 100,
+      "pcg": 500,
+      "mac": 500
+    }
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "logical_cpu_count": 12,
+    "python": "3.12.10",
+    "moon": "moon 0.1.20260618 (afb4494 2026-06-18)\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg",
+    "moonrun": "C:\\Users\\admin\\.moon\\bin\\moonrun.exe",
+    "artifact": "D:\\yufenfen\\MoonBit\\project\\FlowLabLite\\.worktrees\\codex-re100-validation\\_build\\wasm\\release\\build\\cmd\\main\\main.wasm"
+  },
+  "summary": {
+    "chorin": {
+      "n": 15,
+      "mean_ms": 2135.6720333142825,
+      "sample_std_ms": 25.17987815978088,
+      "median_ms": 2119.751400081441,
+      "min_ms": 2103.1196999829262,
+      "max_ms": 2183.3608001470566,
+      "cv_percent": 1.179014275928173
+    },
+    "simple": {
+      "n": 15,
+      "mean_ms": 461.02939336560667,
+      "sample_std_ms": 12.574986365197606,
+      "median_ms": 460.55050007998943,
+      "min_ms": 443.88139992952347,
+      "max_ms": 483.0728000961244,
+      "cv_percent": 2.7275888579245877
+    },
+    "pcg": {
+      "n": 15,
+      "mean_ms": 3177.1854266679534,
+      "sample_std_ms": 29.191574338650536,
+      "median_ms": 3171.68499995023,
+      "min_ms": 3129.054000135511,
+      "max_ms": 3236.2385999877006,
+      "cv_percent": 0.9187872414882928
+    },
+    "mac": {
+      "n": 15,
+      "mean_ms": 3705.833879982432,
+      "sample_std_ms": 66.9293102102297,
+      "median_ms": 3687.8301000688225,
+      "min_ms": 3638.933400157839,
+      "max_ms": 3928.5729001276195,
+      "cv_percent": 1.8060526288498122
+    }
+  },
+  "raw_csv": "D:\\yufenfen\\MoonBit\\project\\FlowLabLite\\.worktrees\\codex-re100-validation\\validation\\results\\performance\\benchmark_samples.csv"
+}

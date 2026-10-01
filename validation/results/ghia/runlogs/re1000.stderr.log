@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\codex-re100-validation\validation\run_ghia_study.py", line 173, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\codex-re100-validation\validation\run_ghia_study.py", line 162, in main
+    run_case(
+  File "D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\codex-re100-validation\validation\run_ghia_study.py", line 116, in run_case
+    data = parse_centerline(path, expected_re=reynolds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\codex-re100-validation\validation\ghia_study.py", line 45, in parse_centerline
+    metadata = _parse_metadata(metadata_line)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\yufenfen\MoonBit\project\FlowLabLite\.worktrees\codex-re100-validation\validation\ghia_study.py", line 143, in _parse_metadata
+    raise ValueError(f"metadata {key} must be finite")
+ValueError: metadata div_norm must be finite

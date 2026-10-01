@@ -1,0 +1,362 @@
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/io_formats.mbt:378:8-378:11 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:77:6-77:9 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:81:14-81:42 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:83:14-83:40 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:316:4-316:22 [E0001] Warning (unused_value): Unused function 'generate_mesh_grid'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:468:29-468:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1549:4-1549:29 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_dilu'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1559:4-1559:28 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_dic'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1581:4-1581:29 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_gamg'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1706:29-1706:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2169:29-2169:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2612:19-2612:28 [E0071] Warning (core_package_not_imported): Package `env` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2661:17-2661:45 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2719:18-2719:44 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main_bench.mbt:2:19-2:27 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:27:4-27:14 [E0001] Warning (unused_value): Unused function 'compute_ru'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:47:4-47:14 [E0001] Warning (unused_value): Unused function 'compute_rv'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:75:4-75:19 [E0001] Warning (unused_value): Unused function 'compute_cfl_max'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:104:4-104:26 [E0001] Warning (unused_value): Unused function 'compute_kinetic_energy'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:149:4-149:30 [E0001] Warning (unused_value): Unused function 'compute_simple_residual_eq'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:140:4-140:22 [E0001] Warning (unused_value): Unused function 'quick_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:163:4-163:22 [E0001] Warning (unused_value): Unused function 'quick_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:185:4-185:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:245:4-245:24 [E0001] Warning (unused_value): Unused function 'pressure_poisson_sor'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:278:4-278:25 [E0001] Warning (unused_value): Unused function 'pressure_poisson_ssor'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:321:4-321:24 [E0001] Warning (unused_value): Unused function 'pressure_residual_l2'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:347:4-347:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:527:4-527:20 [E0001] Warning (unused_value): Unused function 'tvd_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:551:4-551:20 [E0001] Warning (unused_value): Unused function 'tvd_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/io_formats.mbt:378:8-378:11 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:77:6-77:9 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:81:14-81:42 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:83:14-83:40 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:316:4-316:22 [E0001] Warning (unused_value): Unused function 'generate_mesh_grid'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:468:29-468:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1549:4-1549:29 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_dilu'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1559:4-1559:28 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_dic'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1581:4-1581:29 [E0001] Warning (unused_value): Unused function 'pressure_poisson_pcg_gamg'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1706:29-1706:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2169:29-2169:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2612:19-2612:28 [E0071] Warning (core_package_not_imported): Package `env` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2661:17-2661:45 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2719:18-2719:44 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main_bench.mbt:2:19-2:27 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:27:4-27:14 [E0001] Warning (unused_value): Unused function 'compute_ru'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:47:4-47:14 [E0001] Warning (unused_value): Unused function 'compute_rv'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:75:4-75:19 [E0001] Warning (unused_value): Unused function 'compute_cfl_max'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:104:4-104:26 [E0001] Warning (unused_value): Unused function 'compute_kinetic_energy'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:149:4-149:30 [E0001] Warning (unused_value): Unused function 'compute_simple_residual_eq'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:140:4-140:22 [E0001] Warning (unused_value): Unused function 'quick_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:163:4-163:22 [E0001] Warning (unused_value): Unused function 'quick_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:185:4-185:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:245:4-245:24 [E0001] Warning (unused_value): Unused function 'pressure_poisson_sor'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:278:4-278:25 [E0001] Warning (unused_value): Unused function 'pressure_poisson_ssor'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:321:4-321:24 [E0001] Warning (unused_value): Unused function 'pressure_residual_l2'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:347:4-347:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:527:4-527:20 [E0001] Warning (unused_value): Unused function 'tvd_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:551:4-551:20 [E0001] Warning (unused_value): Unused function 'tvd_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/io_formats.mbt:378:8-378:11 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:77:6-77:9 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:81:14-81:42 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:83:14-83:40 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:468:29-468:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:1706:29-1706:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2169:29-2169:32 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2612:19-2612:28 [E0071] Warning (core_package_not_imported): Package `env` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2661:17-2661:45 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main.mbt:2719:18-2719:44 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main_bench.mbt:2:19-2:27 [E0071] Warning (core_package_not_imported): Package `bench` from `moonbitlang/core/` is used without import. This is deprecated. Please add it to the imports in the moon.pkg file.
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main_ext_wbtest.mbt:54:10-54:13 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/main_ext_wbtest.mbt:935:39-935:42 [E0020] Warning (deprecated): Use !expr instead
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/monitor.mbt:47:4-47:14 [E0001] Warning (unused_value): Unused function 'compute_rv'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:163:4-163:22 [E0001] Warning (unused_value): Unused function 'quick_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:185:4-185:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_x'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:278:4-278:25 [E0001] Warning (unused_value): Unused function 'pressure_poisson_ssor'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:347:4-347:23 [E0001] Warning (unused_value): Unused function 'upwind_convection_y'
+/mnt/d/yufenfen/MoonBit/project/FlowLabLite/.worktrees/codex-re100-validation/artifacts/final_submission_2d_4d0162b/FlowLabLite-thesis-final-2D-5843-lines-4d0162b/cmd/main/schemes.mbt:551:4-551:20 [E0001] Warning (unused_value): Unused function 'tvd_convection_y'
+Time step 10/10 completed
+Time step 10/20 completed
+Time step 20/20 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/30 completed
+Time step 20/30 completed
+Time step 30/30 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/500 completed
+Time step 20/500 completed
+Time step 30/500 completed
+Time step 40/500 completed
+Time step 50/500 completed
+Time step 60/500 completed
+Time step 70/500 completed
+Time step 80/500 completed
+Time step 90/500 completed
+Time step 100/500 completed
+Time step 110/500 completed
+Time step 120/500 completed
+Time step 130/500 completed
+Time step 140/500 completed
+Time step 150/500 completed
+Time step 160/500 completed
+Time step 170/500 completed
+Time step 180/500 completed
+Time step 190/500 completed
+Time step 200/500 completed
+Time step 210/500 completed
+Time step 220/500 completed
+Time step 230/500 completed
+Time step 240/500 completed
+Time step 250/500 completed
+Time step 260/500 completed
+Time step 270/500 completed
+Time step 280/500 completed
+Time step 290/500 completed
+Time step 300/500 completed
+Time step 310/500 completed
+Time step 320/500 completed
+Time step 330/500 completed
+Time step 340/500 completed
+Time step 350/500 completed
+Time step 360/500 completed
+Time step 370/500 completed
+Time step 380/500 completed
+Time step 390/500 completed
+Time step 400/500 completed
+Time step 410/500 completed
+Time step 420/500 completed
+Time step 430/500 completed
+Time step 440/500 completed
+Time step 450/500 completed
+Time step 460/500 completed
+Time step 470/500 completed
+Time step 480/500 completed
+Time step 490/500 completed
+Time step 500/500 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/200 completed
+Time step 20/200 completed
+Time step 30/200 completed
+Time step 40/200 completed
+Time step 50/200 completed
+Time step 60/200 completed
+Time step 70/200 completed
+Time step 80/200 completed
+Time step 90/200 completed
+Time step 100/200 completed
+Time step 110/200 completed
+Time step 120/200 completed
+Time step 130/200 completed
+Time step 140/200 completed
+Time step 150/200 completed
+Time step 160/200 completed
+Time step 170/200 completed
+Time step 180/200 completed
+Time step 190/200 completed
+Time step 200/200 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+PCG step 10/50: pressure iters=78
+PCG step 20/50: pressure iters=69
+PCG step 30/50: pressure iters=63
+PCG step 40/50: pressure iters=60
+PCG step 50/50: pressure iters=59
+PCG step 10/10: pressure iters=78
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+PCG step 10/100: pressure iters=78
+PCG step 20/100: pressure iters=69
+PCG step 30/100: pressure iters=63
+PCG step 40/100: pressure iters=60
+PCG step 50/100: pressure iters=59
+PCG step 60/100: pressure iters=45
+PCG step 70/100: pressure iters=32
+PCG step 80/100: pressure iters=39
+PCG step 90/100: pressure iters=33
+PCG step 100/100: pressure iters=34
+PCG step 10/200: pressure iters=78
+PCG step 20/200: pressure iters=69
+PCG step 30/200: pressure iters=63
+PCG step 40/200: pressure iters=60
+PCG step 50/200: pressure iters=59
+PCG step 60/200: pressure iters=45
+PCG step 70/200: pressure iters=32
+PCG step 80/200: pressure iters=39
+PCG step 90/200: pressure iters=33
+PCG step 100/200: pressure iters=34
+PCG step 110/200: pressure iters=39
+PCG step 120/200: pressure iters=40
+PCG step 130/200: pressure iters=41
+PCG step 140/200: pressure iters=43
+PCG step 150/200: pressure iters=43
+PCG step 160/200: pressure iters=43
+PCG step 170/200: pressure iters=43
+PCG step 180/200: pressure iters=42
+PCG step 190/200: pressure iters=42
+PCG step 200/200: pressure iters=42
+Time step 10/10 completed
+PCG step 10/10: pressure iters=78
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/50: pressure iters=133
+MAC step 20/50: pressure iters=124
+MAC step 30/50: pressure iters=111
+MAC step 40/50: pressure iters=100
+MAC step 50/50: pressure iters=71
+MAC step 10/200: pressure iters=133
+MAC step 20/200: pressure iters=124
+MAC step 30/200: pressure iters=111
+MAC step 40/200: pressure iters=100
+MAC step 50/200: pressure iters=71
+MAC step 60/200: pressure iters=70
+MAC step 70/200: pressure iters=69
+MAC step 80/200: pressure iters=67
+MAC step 90/200: pressure iters=64
+MAC step 100/200: pressure iters=64
+MAC step 110/200: pressure iters=61
+MAC step 120/200: pressure iters=61
+MAC step 130/200: pressure iters=60
+MAC step 140/200: pressure iters=60
+MAC step 150/200: pressure iters=58
+MAC step 160/200: pressure iters=58
+MAC step 170/200: pressure iters=57
+MAC step 180/200: pressure iters=57
+MAC step 190/200: pressure iters=47
+MAC step 200/200: pressure iters=46
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/10 completed
+Time step 10/10 completed
+Time step 10/20 completed
+Time step 20/20 completed
+MAC step 10/200: pressure iters=133
+MAC step 20/200: pressure iters=124
+MAC step 30/200: pressure iters=111
+MAC step 40/200: pressure iters=100
+MAC step 50/200: pressure iters=71
+MAC step 60/200: pressure iters=70
+MAC step 70/200: pressure iters=69
+MAC step 80/200: pressure iters=67
+MAC step 90/200: pressure iters=64
+MAC step 100/200: pressure iters=64
+MAC step 110/200: pressure iters=61
+MAC step 120/200: pressure iters=61
+MAC step 130/200: pressure iters=60
+MAC step 140/200: pressure iters=60
+MAC step 150/200: pressure iters=58
+MAC step 160/200: pressure iters=58
+MAC step 170/200: pressure iters=57
+MAC step 180/200: pressure iters=57
+MAC step 190/200: pressure iters=47
+MAC step 200/200: pressure iters=46
+PCG step 10/200: pressure iters=78
+PCG step 20/200: pressure iters=69
+PCG step 30/200: pressure iters=63
+PCG step 40/200: pressure iters=60
+PCG step 50/200: pressure iters=59
+PCG step 60/200: pressure iters=45
+PCG step 70/200: pressure iters=32
+PCG step 80/200: pressure iters=39
+PCG step 90/200: pressure iters=33
+PCG step 100/200: pressure iters=34
+PCG step 110/200: pressure iters=39
+PCG step 120/200: pressure iters=40
+PCG step 130/200: pressure iters=41
+PCG step 140/200: pressure iters=43
+PCG step 150/200: pressure iters=43
+PCG step 160/200: pressure iters=43
+PCG step 170/200: pressure iters=43
+PCG step 180/200: pressure iters=42
+PCG step 190/200: pressure iters=42
+PCG step 200/200: pressure iters=42
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/100 completed
+Time step 20/100 completed
+Time step 30/100 completed
+Time step 40/100 completed
+Time step 50/100 completed
+Time step 60/100 completed
+Time step 70/100 completed
+Time step 80/100 completed
+Time step 90/100 completed
+Time step 100/100 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/50 completed
+Time step 20/50 completed
+Time step 30/50 completed
+Time step 40/50 completed
+Time step 50/50 completed
+Time step 10/10 completed
+Total tests: 156, passed: 156, failed: 0.
